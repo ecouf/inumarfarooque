@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyMaster — Spaced Repetition Tracker | inumarfarooque.in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --surface: #ffffff;
+      --background: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--background); color: var(--text); min-height: 100vh; }
+
+    /* Top Nav */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .user-pill { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: #172554; }
+    .btn-secondary { background: white; border-color: var(--border); color: var(--text); }
+    .btn-secondary:hover { background: var(--background); }
+    .btn-danger { background: #fee2e2; color: var(--danger); border-color: #fecaca; }
+    .btn-danger:hover { background: #fca5a5; }
+
+    /* Layout */
+    .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+
+    /* Scorecards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .metric-title { font-size: 0.75rem; text-transform: uppercase; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
+    .metric-value { font-size: 1.6rem; font-weight: 700; color: var(--primary); }
+
+    /* Topic Controls */
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .search-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    input[type="text"], input[type="date"], select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      background: var(--surface);
+    }
+    input:focus, select:focus { border-color: var(--primary-light); }
+
+    /* Table */
+    .table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1000px; }
+    th {
+      background: #f1f5f9;
+      color: #334155;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:hover { background-color: #fafbfc; }
+
+    /* Stage Badges */
+    .stage-pill {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      min-width: 72px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      user-select: none;
+    }
+    .stage-pill.done { background: #dcfce7; border-color: #86efac; color: #15803d; }
+    .stage-pill.due-today { background: #fef3c7; border-color: #fde047; color: #854d0e; font-weight: 600; }
+    .stage-pill.overdue { background: #fee2e2; border-color: #fca5a5; color: #991b1b; font-weight: 600; }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+    .hidden { display: none !important; }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 480px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+    .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <div class="logo">
+      <span>📚 StudyMaster</span>
+      <span style="font-size: 0.75rem; font-weight: 400; color: var(--muted); margin-left: 6px;">| inumarfarooque.in</span>
+    </div>
+    <div class="nav-actions">
+      <div id="authNavLoggedIn" class="hidden">
+        <span class="user-pill" id="studentWelcome"></span>
+        <button class="btn btn-secondary" onclick="logoutStudent()">Log out</button>
+      </div>
+      <div id="authNavLoggedOut">
+        <button class="btn btn-secondary" onclick="openModal('authModal')">Login / Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main App Container -->
+  <main class="container">
+    
+    <!-- Scorecards Overview -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-title">Discipline / Subjects</span>
+        <span class="metric-value" id="kpiDisciplines">0</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Total Topics</span>
+        <span class="metric-value" id="kpiTopics">0</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Revisions Due Today</span>
+        <span class="metric-value" style="color: var(--warning);" id="kpiDueToday">0</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Overdue Revisions</span>
+        <span class="metric-value" style="color: var(--danger);" id="kpiOverdue">0</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Completed Sessions</span>
+        <span class="metric-value" style="color: var(--success);" id="kpiCompleted">0</span>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="action-bar">
+      <div class="search-filter">
+        <input type="text" id="searchInput" placeholder="Search topic or unit..." oninput="renderTable()" />
+        <select id="disciplineFilter" onchange="renderTable()">
+          <option value="">All Disciplines</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-secondary" onclick="exportToCSV()">Export Study Master CSV</button>
+        <button class="btn btn-primary" onclick="checkAuthAndOpenTopicModal()">+ Add New Topic</button>
+      </div>
+    </div>
+
+    <!-- Study Master Table -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Discipline</th>
+            <th>Unit / Chapter</th>
+            <th>Topic</th>
+            <th>Start Date</th>
+            <th>R1 (+1D)</th>
+            <th>R2 (+1W)</th>
+            <th>R3 (+2W)</th>
+            <th>R4 (+1M)</th>
+            <th>R5 (+3M)</th>
+            <th>R6 (+5M)</th>
+            <th>R7 (+6M)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="topicsTableBody">
+          <!-- Topics will render here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- AUTH MODAL (Login & Registration) -->
+  <div id="authModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="authModalTitle">Student Login</h3>
+        <button class="btn btn-secondary" style="padding: 2px 8px;" onclick="closeModal('authModal')">✕</button>
+      </div>
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group" id="nameGroup" style="display: none;">
+          <label>Full Name</label>
+          <input type="text" id="authName" placeholder="Your Name" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="text" id="authEmail" required placeholder="student@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="authPassword" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="authSubmitBtn">Log In</button>
+      </form>
+      <p style="margin-top: 1rem; font-size: 0.8rem; text-align: center; color: var(--muted);">
+        <span id="authToggleText">Don't have an account?</span> 
+        <a href="#" style="color: var(--primary-light); font-weight: 600;" onclick="toggleAuthMode(event)" id="authToggleLink">Create Account</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ADD TOPIC MODAL -->
+  <div id="topicModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Topic to Study Master</h3>
+        <button class="btn btn-secondary" style="padding: 2px 8px;" onclick="closeModal('topicModal')">✕</button>
+      </div>
+      <form id="topicForm" onsubmit="handleCreateTopic(event)">
+        <div class="form-group">
+          <label>Discipline / Course</label>
+          <input type="text" id="topicDiscipline" required placeholder="e.g. Geography, CS, UPSC Paper 1" />
+        </div>
+        <div class="form-group">
+          <label>Unit / Module</label>
+          <input type="text" id="topicUnit" required placeholder="e.g. Unit 1: Geomorphology" />
+        </div>
+        <div class="form-group">
+          <label>Topic / Chapter</label>
+          <input type="text" id="topicName" required placeholder="e.g. Plate Tectonics & Continental Drift" />
+        </div>
+        <div class="form-group">
+          <label>First Date of Study</label>
+          <input type="date" id="topicDate" required />
+        </div>
+        <div class="form-group">
+          <label>Notes / Flashcard Link</label>
+          <input type="text" id="topicNotes" placeholder="Summary notes or mind dump reference" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Schedule 7-Stage Revisions</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /* ========================================================
+       7-STAGE SPACING REVISION INTERVALS
+       R1: Day 2 (+1 day)
+       R2: Week 1 (+7 days)
+       R3: Week 2 (+14 days)
+       R4: 1 Month (+30 days)
+       R5: 3 Months (+90 days)
+       R6: 5 Months (+150 days)
+       R7: 6 Months (+180 days)
+       ======================================================== */
+    const REVISION_INTERVALS = [
+      { key: 'R1', label: 'R1 (+1D)', days: 1 },
+      { key: 'R2', label: 'R2 (+1W)', days: 7 },
+      { key: 'R3', label: 'R3 (+2W)', days: 14 },
+      { key: 'R4', label: 'R4 (+1M)', days: 30 },
+      { key: 'R5', label: 'R5 (+3M)', days: 90 },
+      { key: 'R6', label: 'R6 (+5M)', days: 150 },
+      { key: 'R7', label: 'R7 (+6M)', days: 180 }
+    ];
+
+    // Local Storage Data Keys
+    const DB_USERS_KEY = 'studymaster_users';
+    const DB_TOPICS_KEY = 'studymaster_topics';
+    const CURRENT_USER_KEY = 'studymaster_active_session';
+
+    let isRegisterMode = false;
+    let currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY)) || null;
+
+    // Helper: Add days to date string
+    function computeTargetDate(baseDateStr, daysToAdd) {
+      const d = new Date(baseDateStr);
+      d.setDate(d.getDate() + daysToAdd);
+      return d.toISOString().split('T')[0];
+    }
+
+    function initApp() {
+      // Set default date picker to today
+      document.getElementById('topicDate').value = new Date().toISOString().split('T')[0];
+      updateAuthUI();
+      renderTable();
+    }
+
+    /* --- AUTHENTICATION MODULE --- */
+    function updateAuthUI() {
+      const loggedInDiv = document.getElementById('authNavLoggedIn');
+      const loggedOutDiv = document.getElementById('authNavLoggedOut');
+      const studentWelcome = document.getElementById('studentWelcome');
+
+      if (currentUser) {
+        loggedInDiv.classList.remove('hidden');
+        loggedOutDiv.classList.add('hidden');
+        studentWelcome.textContent = `👤 ${currentUser.name} (${currentUser.email})`;
+      } else {
+        loggedInDiv.classList.add('hidden');
+        loggedOutDiv.classList.remove('hidden');
+      }
+    }
+
+    function toggleAuthMode(e) {
+      if (e) e.preventDefault();
+      isRegisterMode = !isRegisterMode;
+      document.getElementById('authModalTitle').textContent = isRegisterMode ? 'Create Student Account' : 'Student Login';
+      document.getElementById('nameGroup').style.display = isRegisterMode ? 'flex' : 'none';
+      document.getElementById('authSubmitBtn').textContent = isRegisterMode ? 'Create Account' : 'Log In';
+      document.getElementById('authToggleText').textContent = isRegisterMode ? 'Already have an account?' : "Don't have an account?";
+      document.getElementById('authToggleLink').textContent = isRegisterMode ? 'Log In' : 'Create Account';
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value.trim().toLowerCase();
+      const password = document.getElementById('authPassword').value;
+      const users = JSON.parse(localStorage.getItem(DB_USERS_KEY)) || [];
+
+      if (isRegisterMode) {
+        const name = document.getElementById('authName').value.trim();
+        if (users.find(u => u.email === email)) {
+          alert('An account with this email already exists.');
+          return;
+        }
+        const newUser = { id: 'usr_' + Date.now(), name: name || 'Student', email, password };
+        users.push(newUser);
+        localStorage.setItem(DB_USERS_KEY, JSON.stringify(users));
+        currentUser = newUser;
+      } else {
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) {
+          alert('Invalid email or password.');
+          return;
+        }
+        currentUser = user;
+      }
+
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+      closeModal('authModal');
+      updateAuthUI();
+      renderTable();
+    }
+
+    function logoutStudent() {
+      currentUser = null;
+      localStorage.removeItem(CURRENT_USER_KEY);
+      updateAuthUI();
+      renderTable();
+    }
+
+    function checkAuthAndOpenTopicModal() {
+      if (!currentUser) {
+        alert('Please create an account or log in to track your study topics.');
+        openModal('authModal');
+        return;
+      }
+      openModal('topicModal');
+    }
+
+    /* --- STUDY MASTER TOPIC DATA MODULE --- */
+    function handleCreateTopic(e) {
+      e.preventDefault();
+      const discipline = document.getElementById('topicDiscipline').value.trim();
+      const unit = document.getElementById('topicUnit').value.trim();
+      const topicName = document.getElementById('topicName').value.trim();
+      const startDate = document.getElementById('topicDate').value;
+      const notes = document.getElementById('topicNotes').value.trim();
+
+      // Initialize the 7 revision schedules
+      const revisions = {};
+      REVISION_INTERVALS.forEach(stage => {
+        revisions[stage.key] = {
+          targetDate: computeTargetDate(startDate, stage.days),
+          completed: false,
+          completedDate: null
+        };
+      });
+
+      const newTopic = {
+        id: 'top_' + Date.now(),
+        userId: currentUser.id,
+        discipline,
+        unit,
+        topicName,
+        startDate,
+        notes,
+        revisions
+      };
+
+      const allTopics = JSON.parse(localStorage.getItem(DB_TOPICS_KEY)) || [];
+      allTopics.push(newTopic);
+      localStorage.setItem(DB_TOPICS_KEY, JSON.stringify(allTopics));
+
+      closeModal('topicModal');
+      document.getElementById('topicForm').reset();
+      renderTable();
+    }
+
+    function toggleStage(topicId, stageKey) {
+      if (!currentUser) return;
+      const allTopics = JSON.parse(localStorage.getItem(DB_TOPICS_KEY)) || [];
+      const topic = allTopics.find(t => t.id === topicId && t.userId === currentUser.id);
+      if (!topic) return;
+
+      const stage = topic.revisions[stageKey];
+      stage.completed = !stage.completed;
+      stage.completedDate = stage.completed ? new Date().toISOString().split('T')[0] : null;
+
+      localStorage.setItem(DB_TOPICS_KEY, JSON.stringify(allTopics));
+      renderTable();
+    }
+
+    function deleteTopic(topicId) {
+      if (!confirm('Are you sure you want to delete this study topic?')) return;
+      let allTopics = JSON.parse(localStorage.getItem(DB_TOPICS_KEY)) || [];
+      allTopics = allTopics.filter(t => !(t.id === topicId && t.userId === currentUser.id));
+      localStorage.setItem(DB_TOPICS_KEY, JSON.stringify(allTopics));
+      renderTable();
+    }
+
+    /* --- RENDERING & METRICS --- */
+    function renderTable() {
+      const tbody = document.getElementById('topicsTableBody');
+      const discFilter = document.getElementById('disciplineFilter');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const selectedDisc = discFilter.value;
+
+      tbody.innerHTML = '';
+
+      if (!currentUser) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--muted); padding: 2.5rem;">Please log in or create an account to view and manage your study topics.</td></tr>`;
+        updateMetrics([]);
+        return;
+      }
+
+      const allTopics = JSON.parse(localStorage.getItem(DB_TOPICS_KEY)) || [];
+      const studentTopics = allTopics.filter(t => t.userId === currentUser.id);
+
+      // Populate discipline dropdown options
+      const disciplines = [...new Set(studentTopics.map(t => t.discipline))];
+      discFilter.innerHTML = '<option value="">All Disciplines</option>' + disciplines.map(d => `<option value="${d}" ${d === selectedDisc ? 'selected' : ''}>${d}</option>`).join('');
+
+      // Filtered topics
+      const filtered = studentTopics.filter(t => {
+        const matchesSearch = t.topicName.toLowerCase().includes(search) || t.unit.toLowerCase().includes(search);
+        const matchesDisc = !selectedDisc || t.discipline === selectedDisc;
+        return matchesSearch && matchesDisc;
+      });
+
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      filtered.forEach(topic => {
+        const tr = document.createElement('tr');
+        
+        let stagesHtml = '';
+        REVISION_INTERVALS.forEach(s => {
+          const rev = topic.revisions[s.key];
+          let statusClass = '';
+          let statusText = rev.targetDate;
+
+          if (rev.completed) {
+            statusClass = 'done';
+            statusText = '✓ ' + (rev.completedDate || 'Done');
+          } else if (rev.targetDate === todayStr) {
+            statusClass = 'due-today';
+            statusText = '⚡ Due Today';
+          } else if (rev.targetDate < todayStr) {
+            statusClass = 'overdue';
+            statusText = '⚠ Overdue';
+          }
+
+          stagesHtml += `
+            <td>
+              <div class="stage-pill ${statusClass}" title="Target: ${rev.targetDate}" onclick="toggleStage('${topic.id}', '${s.key}')">
+                <span>${s.key}</span>
+                <span>${statusText}</span>
+              </div>
+            </td>
+          `;
+        });
+
+        tr.innerHTML = `
+          <td><strong>${topic.discipline}</strong></td>
+          <td>${topic.unit}</td>
+          <td>${topic.topicName}</td>
+          <td>${topic.startDate}</td>
+          ${stagesHtml}
+          <td>
+            <button class="btn btn-danger" style="padding: 2px 6px; font-size: 0.75rem;" onclick="deleteTopic('${topic.id}')">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateMetrics(studentTopics);
+    }
+
+    function updateMetrics(topics) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const disciplines = new Set(topics.map(t => t.discipline));
+      let dueToday = 0;
+      let overdue = 0;
+      let completed = 0;
+
+      topics.forEach(t => {
+        Object.values(t.revisions).forEach(rev => {
+          if (rev.completed) {
+            completed++;
+          } else if (rev.targetDate === todayStr) {
+            dueToday++;
+          } else if (rev.targetDate < todayStr) {
+            overdue++;
+          }
+        });
+      });
+
+      document.getElementById('kpiDisciplines').textContent = disciplines.size;
+      document.getElementById('kpiTopics').textContent = topics.length;
+      document.getElementById('kpiDueToday').textContent = dueToday;
+      document.getElementById('kpiOverdue').textContent = overdue;
+      document.getElementById('kpiCompleted').textContent = completed;
+    }
+
+    /* --- EXPORT CSV (STUDY MASTER FORMAT) --- */
+    function exportToCSV() {
+      if (!currentUser) return alert('Please log in first.');
+      const allTopics = JSON.parse(localStorage.getItem(DB_TOPICS_KEY)) || [];
+      const topics = allTopics.filter(t => t.userId === currentUser.id);
+      if (topics.length === 0) return alert('No topics to export.');
+
+      let csv = 'Discipline,Unit/Subject,Topic/Chapter,First Date of Study,R1 Target,R1 Done,R2 Target,R2 Done,R3 Target,R3 Done,R4 Target,R4 Done,R5 Target,R5 Done,R6 Target,R6 Done,R7 Target,R7 Done,Notes\n';
+      
+      topics.forEach(t => {
+        const row = [
+          `"${t.discipline}"`,
+          `"${t.unit}"`,
+          `"${t.topicName}"`,
+          t.startDate,
+          t.revisions.R1.targetDate, t.revisions.R1.completed,
+          t.revisions.R2.targetDate, t.revisions.R2.completed,
+          t.revisions.R3.targetDate, t.revisions.R3.completed,
+          t.revisions.R4.targetDate, t.revisions.R4.completed,
+          t.revisions.R5.targetDate, t.revisions.R5.completed,
+          t.revisions.R6.targetDate, t.revisions.R6.completed,
+          t.revisions.R7.targetDate, t.revisions.R7.completed,
+          `"${t.notes || ''}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', `Study_Master_${currentUser.name}.csv`);
+      a.click();
+    }
+
+    /* --- MODAL CONTROLS --- */
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // Start App
+    window.onload = initApp;
+  </script>
+</body>
+</html>
