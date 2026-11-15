@@ -11,6 +11,7 @@
     :root {
       --primary: #1e3a8a;
       --primary-light: #2563eb;
+      --phonepe: #5f259f;
       --surface: #ffffff;
       --background: #f8fafc;
       --text: #0f172a;
@@ -40,9 +41,28 @@
     .logo-box { display: flex; align-items: center; gap: 8px; }
     .logo-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
     .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
-    .badge-exam { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-trial { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .badge-pro { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    .badge-expired { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
-    /* Touch-Friendly Buttons */
+    /* Trial Alert Banner */
+    .trial-banner {
+      background: #eff6ff;
+      border-bottom: 1px solid #bfdbfe;
+      padding: 0.6rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #1e40af;
+    }
+    .trial-banner.expired {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+
+    /* Buttons */
     .btn {
       min-height: 38px;
       padding: 0.5rem 0.9rem;
@@ -59,6 +79,10 @@
     }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:active { background: #172554; }
+    .btn-phonepe { background: var(--phonepe); color: white; }
+    .btn-phonepe:active { background: #4a1d7c; }
+    .btn-whatsapp { background: #25d366; color: white; }
+    .btn-whatsapp:active { background: #1ebd5b; }
     .btn-secondary { background: white; border-color: var(--border); color: var(--text); }
     .btn-secondary:active { background: #f1f5f9; }
     .btn-danger { background: #fee2e2; color: var(--danger); border-color: #fca5a5; }
@@ -199,9 +223,9 @@
       .mobile-bottom-bar { display: none; }
     }
 
-    /* Modal Overlay (Bottom sheet on phone, centered on desktop) */
+    /* Modal Overlay */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.65);
       display: flex; align-items: flex-end; justify-content: center;
       z-index: 100;
     }
@@ -215,7 +239,7 @@
       max-width: 520px;
       border-radius: 16px 16px 0 0;
       padding: 1.25rem;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
     }
     @media (min-width: 768px) {
@@ -236,26 +260,46 @@
     .modal-tabs { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
     .modal-tab { padding: 0.6rem 0.75rem; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.85rem; font-weight: 600; }
     .modal-tab.active { border-color: var(--primary); color: var(--primary); }
+
+    /* Payment Plan Cards */
+    .pricing-card {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0.65rem;
+    }
+    .pricing-card.selected {
+      border-color: var(--phonepe);
+      background: #faf5ff;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Top Bar -->
   <header>
     <div class="logo-box">
       <span class="logo-title">Study Master</span>
-      <span class="badge badge-exam" id="planBadge">2-Year Spaced Cycle</span>
+      <span class="badge badge-trial" id="planBadge">21-Day Free Trial</span>
     </div>
     <div style="display: flex; gap: 0.5rem;">
       <div id="authNavLoggedIn" class="hidden">
-        <button class="btn btn-secondary" id="profileBtn" style="padding: 0 0.65rem;">👤 Account</button>
+        <button class="btn btn-secondary" id="profileBtn" style="padding: 0 0.65rem;">👤 Account / Upgrade</button>
         <button class="btn btn-secondary" id="logoutBtn" style="padding: 0 0.65rem;">Log out</button>
       </div>
       <div id="authNavLoggedOut">
-        <button class="btn btn-primary" id="openLoginBtn">Login</button>
+        <button class="btn btn-primary" id="openLoginBtn">Login / Register</button>
       </div>
     </div>
   </header>
+
+  <!-- Trial Countdown / Subscription Banner -->
+  <div class="trial-banner" id="trialBanner" style="display: none;">
+    <span id="trialBannerText">⏳ <strong>21-Day Free Trial Active</strong>: Unlimited access across all 12 stages.</span>
+    <button class="btn btn-phonepe" style="padding: 2px 10px; font-size: 0.75rem; min-height: 28px;" id="bannerUpgradeBtn">Upgrade Plan</button>
+  </div>
 
   <main class="container">
     <!-- Key KPIs -->
@@ -305,7 +349,7 @@
       </div>
     </div>
 
-    <!-- MOBILE CARDS VIEW (Responsive Horizontal Swipe for R1-R12) -->
+    <!-- MOBILE CARDS VIEW -->
     <div class="mobile-cards-wrapper" id="mobileCardsBody">
       <div style="text-align: center; color: var(--muted); padding: 2.5rem;">Loading study schedule...</div>
     </div>
@@ -357,22 +401,22 @@
       </div>
       <div class="modal-tabs">
         <div class="modal-tab active" id="tabAuthLogin">Sign In</div>
-        <div class="modal-tab" id="tabAuthRegister">Register</div>
+        <div class="modal-tab" id="tabAuthRegister">Create Account</div>
         <div class="modal-tab" id="tabAuthForgot">Forgot</div>
       </div>
       <form id="authForm">
         <div class="form-group register-field hidden">
-          <label>Full Name *</label>
+          <label>Full Student Name *</label>
           <input type="text" id="authName" placeholder="e.g. Umar Farooque" />
         </div>
         <div class="form-row register-field hidden">
           <div class="form-group">
             <label>Exam / Domain *</label>
-            <input type="text" id="authDiscipline" placeholder="e.g. UPSC CSE / NEET PG" />
+            <input type="text" id="authDiscipline" placeholder="e.g. UPSC CSE / NEET PG / JRF" />
           </div>
           <div class="form-group">
-            <label>Mobile Number</label>
-            <input type="tel" id="authPhone" placeholder="+91 9876543210" />
+            <label>PhonePe / Mobile *</label>
+            <input type="tel" id="authPhone" placeholder="Mobile Number" />
           </div>
         </div>
         <div class="form-group">
@@ -423,35 +467,83 @@
     </div>
   </div>
 
-  <!-- USER PROFILE & PLAN MODAL -->
+  <!-- PHONEPE & UPI PAYMENT UPGRADE MODAL -->
   <div id="profileModal" class="modal-overlay hidden">
     <div class="modal">
       <div class="modal-header">
-        <h3>Student Profile</h3>
+        <h3>Plan & PhonePe Payment</h3>
         <button class="btn btn-secondary" style="padding: 2px 8px;" id="closeProfileModal">✕</button>
       </div>
-      <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
-        <h4 id="profNameDisplay" style="color: var(--primary);">Student</h4>
-        <p id="profEmailDisplay" style="font-size: 0.8rem; color: var(--muted);"></p>
-        <p id="profExamDisplay" style="font-size: 0.8rem; color: var(--muted);"></p>
-      </div>
-      <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.85rem;">
+
+      <!-- Account Status Box -->
+      <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.85rem;">
         <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
-          <span>Plan:</span><strong>2-Year All-Access</strong>
+          <span>Student:</span><strong id="profNameDisplay">Student</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+          <span>Current Status:</span><strong id="profStatusDisplay" style="color: var(--warning);">21-Day Free Trial</strong>
         </div>
         <div style="display:flex; justify-content:space-between;">
-          <span>Status:</span><strong style="color: var(--success);">Active</strong>
+          <span>Access Valid Until:</span><strong id="profValidUntilDisplay">--</strong>
         </div>
       </div>
-      <button class="btn btn-primary" style="width: 100%; height: 44px;" onclick="alert('Subscription active for 2-Year Plan.')">Manage Subscription</button>
+
+      <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Select Subscription Plan:</h4>
+
+      <!-- Plan 1: 1 Year ₹299 -->
+      <div class="pricing-card selected" id="planCard1" onclick="selectPlan('1year', 299)">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong>1-Year Unlimited Access</strong>
+            <p style="font-size: 0.75rem; color: var(--muted);">Full access to 12 revision stages for 365 days</p>
+          </div>
+          <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary);">₹299</div>
+        </div>
+      </div>
+
+      <!-- Plan 2: 2 Year ₹499 -->
+      <div class="pricing-card" id="planCard2" onclick="selectPlan('2year', 499)">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong>2-Year Comprehensive Plan (Best for UPSC/NEET)</strong>
+            <p style="font-size: 0.75rem; color: var(--muted);">Full 730-day multi-year retention cycle</p>
+          </div>
+          <div style="font-size: 1.15rem; font-weight: 700; color: var(--phonepe);">₹499</div>
+        </div>
+      </div>
+
+      <!-- PhonePe Payment Details Box -->
+      <div style="border: 2px dashed var(--phonepe); background: #faf5ff; border-radius: 8px; padding: 1rem; text-align: center; margin: 1rem 0;">
+        <p style="font-size: 0.8rem; font-weight: 700; color: var(--phonepe); text-transform: uppercase;">Pay via PhonePe / GPay / Paytm UPI</p>
+        <div style="font-size: 1.35rem; font-weight: 800; color: #3b0764; margin: 6px 0; letter-spacing: 1px;">
+          📱 7992306763
+        </div>
+        <p style="font-size: 0.75rem; color: #6b21a8; margin-bottom: 8px;">Name: <strong>Umar Farooque</strong></p>
+
+        <!-- Dynamic QR Code generated via free QR API -->
+        <div style="background: white; padding: 6px; display: inline-block; border-radius: 8px; border: 1px solid #e9d5ff;">
+          <img id="phonepeQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=7992306763@ybl&pn=Umar%20Farooque&am=299&cu=INR" alt="PhonePe QR Code" style="display:block; width:150px; height:150px;" />
+        </div>
+        <p style="font-size: 0.7rem; color: var(--muted); margin-top: 6px;">Scan with PhonePe, GPay, Paytm, or BHIM</p>
+      </div>
+
+      <!-- Step 2: Send Screenshot via WhatsApp -->
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+        <button class="btn btn-whatsapp" style="width: 100%; height: 44px;" id="sendWhatsappBtn" onclick="sendPaymentProofOnWhatsApp()">
+          📲 Send Screenshot on WhatsApp (7992306763)
+        </button>
+        <p style="font-size: 0.72rem; color: var(--muted); text-align: center;">
+          After paying, click above to send your payment screenshot along with your email. Your plan will be activated immediately!
+        </p>
+      </div>
     </div>
   </div>
 
-  <!-- PAUSE / HOLIDAY MODAL -->
+  <!-- BRAIN RECHARGE MODAL -->
   <div id="holidayModal" class="modal-overlay hidden">
     <div class="modal">
       <div class="modal-header">
-        <h3>Vacation & Break Pause</h3>
+        <h3>Pause Revision Schedule</h3>
         <button class="btn btn-secondary" style="padding: 2px 8px;" id="closeHolidayModal">✕</button>
       </div>
       <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem;">
@@ -467,7 +559,7 @@
     </div>
   </div>
 
-  <!-- FIREBASE 12-STAGE INTERVAL ENGINE -->
+  <!-- FIREBASE ENGINE SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
@@ -509,28 +601,31 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    /* ========================================================
-       12-STAGE SPACED REPETITION ENGINE (UP TO 2 YEARS / 730 DAYS)
-       ======================================================== */
+    const OWNER_PHONE = "7992306763";
+    const TRIAL_DAYS = 21;
+
+    // 12-Stage Repetition Intervals (Up to 2 Years)
     const STAGES = [
-      { key: 'R1', label: 'R1 (+1D)', days: 1 },
-      { key: 'R2', label: 'R2 (+1W)', days: 7 },
-      { key: 'R3', label: 'R3 (+2W)', days: 14 },
-      { key: 'R4', label: 'R4 (+1M)', days: 30 },
-      { key: 'R5', label: 'R5 (+2M)', days: 60 },
-      { key: 'R6', label: 'R6 (+3M)', days: 90 },
-      { key: 'R7', label: 'R7 (+5M)', days: 150 },
-      { key: 'R8', label: 'R8 (+6M)', days: 180 },
-      { key: 'R9', label: 'R9 (+9M)', days: 270 },
-      { key: 'R10', label: 'R10 (+1Y)', days: 365 },
-      { key: 'R11', label: 'R11 (+1.5Y)', days: 540 },
-      { key: 'R12', label: 'R12 (+2Y)', days: 730 }
+      { key: 'R1', days: 1 },
+      { key: 'R2', days: 7 },
+      { key: 'R3', days: 14 },
+      { key: 'R4', days: 30 },
+      { key: 'R5', days: 60 },
+      { key: 'R6', days: 90 },
+      { key: 'R7', days: 150 },
+      { key: 'R8', days: 180 },
+      { key: 'R9', days: 270 },
+      { key: 'R10', days: 365 },
+      { key: 'R11', days: 540 },
+      { key: 'R12', days: 730 }
     ];
 
     let currentStudent = null;
     let studentProfile = null;
     let topicsList = [];
     let currentAuthMode = 'login';
+    let selectedAmount = 299;
+    let selectedPlanLabel = "1-Year Plan (₹299)";
     let unsubscribeFirestore = null;
 
     if (window.innerWidth >= 768) {
@@ -549,19 +644,76 @@
       return Math.floor((new Date(d1Str) - new Date(d2Str)) / (1000 * 60 * 60 * 24));
     }
 
+    // Dynamic Plan Selector
+    window.selectPlan = (planType, amount) => {
+      selectedAmount = amount;
+      selectedPlanLabel = planType === '1year' ? '1-Year Plan (₹299)' : '2-Year Plan (₹499)';
+
+      document.getElementById('planCard1').classList.toggle('selected', planType === '1year');
+      document.getElementById('planCard2').classList.toggle('selected', planType === '2year');
+
+      // Update QR Code with exact amount
+      const upiUrl = `upi://pay?pa=${OWNER_PHONE}@ybl&pn=Umar%20Farooque&am=${amount}&cu=INR`;
+      document.getElementById('phonepeQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiUrl)}`;
+    };
+
+    // WhatsApp Direct Verification Hook
+    window.sendPaymentProofOnWhatsApp = async () => {
+      if (!currentStudent) return alert("Please log in first.");
+
+      const studentName = (studentProfile && studentProfile.fullName) || currentStudent.displayName || "Student";
+      const studentEmail = currentStudent.email || "";
+      const studentPhone = (studentProfile && studentProfile.phone) || "";
+
+      // Message sent directly to Umar Farooque's WhatsApp
+      const message = `Hello Umar Sir,%0A%0AI have paid via PhonePe for Study Master.%0A%0A📌 *Plan Selected:* ${selectedPlanLabel}%0A👤 *Name:* ${studentName}%0A📧 *Email:* ${studentEmail}%0A📱 *Registered Phone:* ${studentPhone}%0A%0APlease find the payment screenshot attached and activate my plan. Thank you!`;
+
+      // Log payment request in Firestore for Umar's dashboard
+      await updateDoc(doc(db, "students", currentStudent.uid), {
+        pendingPayment: {
+          requestedPlan: selectedPlanLabel,
+          amount: selectedAmount,
+          requestedAt: new Date().toISOString()
+        }
+      });
+
+      // Open WhatsApp Web or Mobile App
+      const waUrl = `https://wa.me/91${OWNER_PHONE}?text=${message}`;
+      window.open(waUrl, '_blank');
+    };
+
+    /* AUTH STATE OBSERVER & TRIAL VERIFICATION */
     onAuthStateChanged(auth, async (user) => {
       currentStudent = user;
       if (user) {
         document.getElementById('authNavLoggedIn').classList.remove('hidden');
         document.getElementById('authNavLoggedOut').classList.add('hidden');
 
-        const profSnap = await getDoc(doc(db, "students", user.uid));
+        const profRef = doc(db, "students", user.uid);
+        const profSnap = await getDoc(profRef);
+
+        const now = new Date();
+        const trialEndDate = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
         if (profSnap.exists()) {
           studentProfile = profSnap.data();
         } else {
-          studentProfile = { fullName: user.displayName || 'Student', email: user.email, discipline: 'UPSC / IAS' };
-          await setDoc(doc(db, "students", user.uid), studentProfile);
+          // Initialize New Student with 21-Day Free Trial
+          studentProfile = {
+            fullName: user.displayName || 'Student',
+            email: user.email,
+            phone: '',
+            discipline: 'UPSC / IAS',
+            plan: 'Trial',
+            paymentStatus: 'Trial Active',
+            trialStartDate: now.toISOString().split('T')[0],
+            validUntil: trialEndDate,
+            createdAt: Date.now()
+          };
+          await setDoc(profRef, studentProfile);
         }
+
+        checkSubscriptionStatus();
         updateProfileUI();
 
         if (unsubscribeFirestore) unsubscribeFirestore();
@@ -575,13 +727,46 @@
         if (unsubscribeFirestore) unsubscribeFirestore();
         studentProfile = null;
         topicsList = [];
+        document.getElementById('trialBanner').style.display = 'none';
         document.getElementById('authNavLoggedIn').classList.add('hidden');
         document.getElementById('authNavLoggedOut').classList.remove('hidden');
         renderViews();
       }
     });
 
-    /* AUTH CONTROLS */
+    // Check if 21-Day Trial is active or expired
+    function checkSubscriptionStatus() {
+      if (!studentProfile) return;
+      const today = new Date().toISOString().split('T')[0];
+      const validUntil = studentProfile.validUntil || today;
+      const banner = document.getElementById('trialBanner');
+      const bannerText = document.getElementById('trialBannerText');
+      const badge = document.getElementById('planBadge');
+
+      banner.style.display = 'flex';
+
+      if (studentProfile.plan === 'Pro' || studentProfile.paymentStatus === 'Paid') {
+        badge.className = 'badge badge-pro';
+        badge.textContent = studentProfile.planTitle || 'Pro Member';
+        banner.style.display = 'none'; // No need for nag banner if paid
+      } else {
+        const daysLeft = calculateDayDiff(validUntil, today);
+
+        if (daysLeft >= 0) {
+          badge.className = 'badge badge-trial';
+          badge.textContent = `${daysLeft}d Trial Left`;
+          banner.className = 'trial-banner';
+          bannerText.innerHTML = `⏳ <strong>21-Day Free Trial Active</strong>: You have <strong>${daysLeft} days remaining</strong>. Upgrade to 1 or 2-Year plan via PhonePe.`;
+        } else {
+          badge.className = 'badge badge-expired';
+          badge.textContent = 'Trial Expired';
+          banner.className = 'trial-banner expired';
+          bannerText.innerHTML = `⚠️ <strong>Your 21-Day Free Trial has expired</strong>. Please pay ₹299 (1 Year) or ₹499 (2 Year) on PhonePe (7992306763) to continue.`;
+        }
+      }
+    }
+
+    /* AUTH ACTIONS */
     function setAuthMode(m) {
       currentAuthMode = m;
       document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
@@ -600,7 +785,7 @@
         document.getElementById('authModalTitle').textContent = 'Create Student Account';
         regFields.forEach(f => f.classList.remove('hidden'));
         passGroup.classList.remove('hidden');
-        submitBtn.textContent = 'Register';
+        submitBtn.textContent = 'Start 21-Day Free Trial';
       } else {
         document.getElementById('tabAuthForgot').classList.add('active');
         document.getElementById('authModalTitle').textContent = 'Reset Password';
@@ -625,10 +810,24 @@
         } else if (currentAuthMode === 'register') {
           const name = document.getElementById('authName').value.trim() || 'Student';
           const disc = document.getElementById('authDiscipline').value.trim() || 'UPSC';
+          const phone = document.getElementById('authPhone').value.trim();
+
           const cred = await createUserWithEmailAndPassword(auth, email, pass);
           await updateProfile(cred.user, { displayName: name });
+
+          const now = new Date();
+          const trialEnd = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
           await setDoc(doc(db, "students", cred.user.uid), {
-            fullName: name, email, discipline: disc, createdAt: Date.now()
+            fullName: name,
+            email,
+            phone,
+            discipline: disc,
+            plan: 'Trial',
+            paymentStatus: 'Trial Active',
+            trialStartDate: now.toISOString().split('T')[0],
+            validUntil: trialEnd,
+            createdAt: Date.now()
           });
         } else {
           await sendPasswordResetEmail(auth, email);
@@ -645,10 +844,30 @@
 
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-    /* TOPIC ENGINE (R1 TO R12 INITIALIZATION) */
+    /* CHECK IF STUDENT CAN ADD TOPICS */
+    function checkCanEdit() {
+      if (!currentStudent) {
+        alert('Please log in first.');
+        return false;
+      }
+      const today = new Date().toISOString().split('T')[0];
+      const validUntil = (studentProfile && studentProfile.validUntil) || today;
+
+      if (studentProfile && (studentProfile.plan === 'Pro' || studentProfile.paymentStatus === 'Paid')) {
+        return true;
+      }
+      if (calculateDayDiff(validUntil, today) < 0) {
+        alert('Your 21-Day Free Trial has expired. Please upgrade via PhonePe (7992306763) to continue editing topics.');
+        document.getElementById('profileModal').classList.remove('hidden');
+        return false;
+      }
+      return true;
+    }
+
+    /* TOPIC ENGINE */
     document.getElementById('topicForm').onsubmit = async (e) => {
       e.preventDefault();
-      if (!currentStudent) return;
+      if (!checkCanEdit()) return;
 
       const discipline = document.getElementById('topicDiscipline').value.trim();
       const unit = document.getElementById('topicUnit').value.trim();
@@ -682,8 +901,10 @@
       document.getElementById('topicForm').reset();
     };
 
-    /* TOGGLE REVISION (ACROSS R1 TO R12) */
+    /* TOGGLE REVISION */
     window.toggleStage = async (topicId, stageKey) => {
+      if (!checkCanEdit()) return;
+
       const topic = topicsList.find(t => t.id === topicId);
       if (!topic) return;
 
@@ -719,12 +940,13 @@
     };
 
     window.removeTopic = async (topicId) => {
+      if (!checkCanEdit()) return;
       if (confirm('Delete this chapter from Study Master?')) {
         await deleteDoc(doc(db, "study_master", topicId));
       }
     };
 
-    /* RENDER MOBILE & DESKTOP VIEWS */
+    /* RENDER VIEWS */
     function renderViews() {
       const mobileBody = document.getElementById('mobileCardsBody');
       const desktopBody = document.getElementById('desktopTableBody');
@@ -736,7 +958,7 @@
       desktopBody.innerHTML = '';
 
       if (!currentStudent) {
-        const emptyMsg = `<div style="text-align: center; color: var(--muted); padding: 3rem;">Please log in to view your 2-Year revision cycle.</div>`;
+        const emptyMsg = `<div style="text-align: center; color: var(--muted); padding: 3rem;">Please log in or register to start your 21-Day Free Trial.</div>`;
         mobileBody.innerHTML = emptyMsg;
         desktopBody.innerHTML = `<tr><td colspan="18" style="text-align:center; padding:3rem; color:var(--muted);">Please log in.</td></tr>`;
         refreshMetrics([]);
@@ -744,6 +966,7 @@
       }
 
       const filtered = topicsList.filter(t => {
+
         const matchesSearch = (t.topicName || '').toLowerCase().includes(search) || (t.unit || '').toLowerCase().includes(search);
         let matchesStatus = true;
         if (status === 'queue') matchesStatus = !t.firstDate;
@@ -792,7 +1015,7 @@
           desktopStagesHtml += `<td>${pillHtml}</td>`;
         });
 
-        // 1. Mobile Card
+        // Mobile Card
         const card = document.createElement('div');
         card.className = 'topic-card';
         card.innerHTML = `
@@ -813,7 +1036,7 @@
         `;
         mobileBody.appendChild(card);
 
-        // 2. Desktop Row
+        // Desktop Row
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${t.discipline}</strong></td>
@@ -854,13 +1077,15 @@
     function updateProfileUI() {
       if (!studentProfile) return;
       document.getElementById('profNameDisplay').textContent = studentProfile.fullName || 'Student';
-      document.getElementById('profEmailDisplay').textContent = studentProfile.email;
-      document.getElementById('profExamDisplay').textContent = 'Exam: ' + (studentProfile.discipline || 'UPSC / IAS');
+      document.getElementById('profStatusDisplay').textContent = studentProfile.plan === 'Pro' ? (studentProfile.planTitle || 'Pro Member (Paid)') : '21-Day Free Trial';
+      document.getElementById('profValidUntilDisplay').textContent = studentProfile.validUntil || '--';
     }
 
-    /* BRAIN RECHARGE / VACATION PAUSE */
+    /* BRAIN RECHARGE */
     document.getElementById('holidayForm').onsubmit = async (e) => {
       e.preventDefault();
+      if (!checkCanEdit()) return;
+
       const days = parseInt(document.getElementById('holidayDays').value);
       if (!days) return;
 
@@ -882,7 +1107,6 @@
     /* EXPORT 12-STAGE CSV */
     document.getElementById('exportCsvBtn').onclick = () => {
       if (!topicsList.length) return alert('No topics to export.');
-      
       let csv = 'Discipline,Unit,Topic,First Date,R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,Total Delay Days,Notes\n';
 
       topicsList.forEach(t => {
@@ -903,7 +1127,7 @@
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `Study_Master_2Year_${studentProfile ? studentProfile.fullName : 'Export'}.csv`;
+      a.download = `Study_Master_${studentProfile ? studentProfile.fullName : 'Export'}.csv`;
       a.click();
     };
 
@@ -912,7 +1136,7 @@
     document.getElementById('closeAuthModal').onclick = () => document.getElementById('authModal').classList.add('hidden');
     
     const openAdd = () => {
-      if (!currentStudent) return alert('Please log in first.');
+      if (!checkCanEdit()) return;
       document.getElementById('topicModal').classList.remove('hidden');
     };
     document.getElementById('openAddTopicBtnMobile').onclick = openAdd;
@@ -920,7 +1144,7 @@
     document.getElementById('closeTopicModal').onclick = () => document.getElementById('topicModal').classList.add('hidden');
 
     const openHoliday = () => {
-      if (!currentStudent) return alert('Please log in first.');
+      if (!checkCanEdit()) return;
       document.getElementById('holidayModal').classList.remove('hidden');
     };
     document.getElementById('holidayBtnMobile').onclick = openHoliday;
@@ -928,6 +1152,7 @@
     document.getElementById('closeHolidayModal').onclick = () => document.getElementById('holidayModal').classList.add('hidden');
 
     document.getElementById('profileBtn').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
+    document.getElementById('bannerUpgradeBtn').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
     document.getElementById('closeProfileModal').onclick = () => document.getElementById('profileModal').classList.add('hidden');
     document.getElementById('searchInput').oninput = renderViews;
     document.getElementById('statusFilter').onchange = renderViews;
