@@ -1,1163 +1,394 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Study Master | 2-Year Spaced Repetition (UPSC, NEET, JRF, IAS)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UGC NET Geography Study Master — 7-Stage Spaced Repetition System</title>
+  <meta name="description" content="Master all 61 UGC NET Geography chapters without burnout using the automated 7-Round Spaced Repetition & 5-Task Safe Cap Workload System." />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
-    :root {
-      --primary: #1e3a8a;
-      --primary-light: #2563eb;
-      --phonepe: #5f259f;
-      --surface: #ffffff;
-      --background: #f8fafc;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --success: #16a34a;
-      --warning: #d97706;
-      --danger: #dc2626;
-      --radius: 10px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--background); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 75px; }
-
-    /* Top Bar */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-    .logo-box { display: flex; align-items: center; gap: 8px; }
-    .logo-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
-    .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
-    .badge-trial { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-    .badge-pro { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-    .badge-expired { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-
-    /* Trial Alert Banner */
-    .trial-banner {
-      background: #eff6ff;
-      border-bottom: 1px solid #bfdbfe;
-      padding: 0.6rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: #1e40af;
-    }
-    .trial-banner.expired {
-      background: #fef2f2;
-      border-color: #fecaca;
-      color: #991b1b;
-    }
-
-    /* Buttons */
-    .btn {
-      min-height: 38px;
-      padding: 0.5rem 0.9rem;
-      border-radius: var(--radius);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      touch-action: manipulation;
-    }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:active { background: #172554; }
-    .btn-phonepe { background: var(--phonepe); color: white; }
-    .btn-phonepe:active { background: #4a1d7c; }
-    .btn-whatsapp { background: #25d366; color: white; }
-    .btn-whatsapp:active { background: #1ebd5b; }
-    .btn-secondary { background: white; border-color: var(--border); color: var(--text); }
-    .btn-secondary:active { background: #f1f5f9; }
-    .btn-danger { background: #fee2e2; color: var(--danger); border-color: #fca5a5; }
-
-    .container { max-width: 1600px; width: 100%; margin: 0 auto; padding: 1rem; flex: 1; }
-
-    /* Scorecards */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.65rem;
-      margin-bottom: 1rem;
-    }
-    @media (min-width: 768px) {
-      .metrics-grid { grid-template-columns: repeat(6, 1fr); }
-      body { padding-bottom: 0; }
-    }
-    .metric-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.75rem 0.85rem;
-    }
-    .metric-title { font-size: 0.68rem; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-    .metric-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-top: 3px; }
-
-    /* Filters Bar */
-    .action-bar {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 1rem;
-    }
-    @media (min-width: 768px) {
-      .action-bar { flex-direction: row; justify-content: space-between; align-items: center; }
-    }
-    .filter-group { display: flex; gap: 0.5rem; width: 100%; }
-    .filter-group input, .filter-group select {
-      flex: 1;
-      height: 42px;
-      padding: 0 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.85rem;
-      background: var(--surface);
-    }
-
-    /* DESKTOP TABLE VIEW (≥ 1024px) */
-    .desktop-table-wrapper {
-      display: none;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow-x: auto;
-    }
-    @media (min-width: 1024px) {
-      .desktop-table-wrapper { display: block; }
-      .mobile-cards-wrapper { display: none; }
-    }
-    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; min-width: 1650px; }
-    th {
-      background: #f8fafc;
-      color: #334155;
-      text-align: left;
-      padding: 0.65rem 0.75rem;
-      font-weight: 600;
-      border-bottom: 2px solid var(--border);
-      white-space: nowrap;
-    }
-    td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-
-    /* MOBILE CARDS VIEW (< 1024px) */
-    .mobile-cards-wrapper { display: flex; flex-direction: column; gap: 0.75rem; }
-    .topic-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-    .topic-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    .topic-discipline { font-size: 0.7rem; font-weight: 700; color: var(--primary-light); text-transform: uppercase; }
-    .topic-name { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-top: 2px; }
-
-    /* Horizontal Revision Strip (Supports 12 rounds on mobile) */
-    .revisions-track {
-      display: flex;
-      gap: 0.45rem;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .stage-pill {
-      min-width: 82px;
-      height: 52px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      cursor: pointer;
-      flex-shrink: 0;
-      touch-action: manipulation;
-    }
-    .stage-pill strong { font-size: 0.72rem; }
-    .stage-pill span { font-size: 0.64rem; }
-    .stage-pill.done { background: #dcfce7; border-color: #86efac; color: #166534; }
-    .stage-pill.due-today { background: #fef3c7; border-color: #fde047; color: #854d0e; font-weight: 700; }
-    .stage-pill.overdue { background: #fee2e2; border-color: #fca5a5; color: #991b1b; font-weight: 700; }
-    .stage-pill.backlog { background: #f1f5f9; border-color: #cbd5e1; color: var(--muted); }
-    .delay-pill-text { font-size: 0.6rem; color: var(--danger); font-weight: 700; }
-
-    /* Bottom Quick Nav on Mobile */
-    .mobile-bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-around;
-      padding: 0.5rem;
-      z-index: 45;
-    }
-    @media (min-width: 768px) {
-      .mobile-bottom-bar { display: none; }
-    }
-
-    /* Modal Overlay */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.65);
-      display: flex; align-items: flex-end; justify-content: center;
-      z-index: 100;
-    }
-    @media (min-width: 768px) {
-      .modal-overlay { align-items: center; padding: 1rem; }
-    }
-    .hidden { display: none !important; }
-    .modal {
-      background: var(--surface);
-      width: 100%;
-      max-width: 520px;
-      border-radius: 16px 16px 0 0;
-      padding: 1.25rem;
-      max-height: 88vh;
-      overflow-y: auto;
-    }
-    @media (min-width: 768px) {
-      .modal { border-radius: var(--radius); }
-    }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .form-group { margin-bottom: 0.85rem; display: flex; flex-direction: column; gap: 0.35rem; }
-    .form-group label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
-    .form-group input, .form-group select {
-      height: 44px;
-      padding: 0 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-    }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-
-    .modal-tabs { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
-    .modal-tab { padding: 0.6rem 0.75rem; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.85rem; font-weight: 600; }
-    .modal-tab.active { border-color: var(--primary); color: var(--primary); }
-
-    /* Payment Plan Cards */
-    .pricing-card {
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      padding: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: 0.65rem;
-    }
-    .pricing-card.selected {
-      border-color: var(--phonepe);
-      background: #faf5ff;
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Top Bar -->
-  <header>
-    <div class="logo-box">
-      <span class="logo-title">Study Master</span>
-      <span class="badge badge-trial" id="planBadge">21-Day Free Trial</span>
-    </div>
-    <div style="display: flex; gap: 0.5rem;">
-      <div id="authNavLoggedIn" class="hidden">
-        <button class="btn btn-secondary" id="profileBtn" style="padding: 0 0.65rem;">👤 Account / Upgrade</button>
-        <button class="btn btn-secondary" id="logoutBtn" style="padding: 0 0.65rem;">Log out</button>
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white text-xs sm:text-sm py-2 px-4 text-center font-medium">
+    <span>🎯 Target UGC NET / JRF Exam • </span>
+    <span class="text-amber-300 font-bold">Limited Launch Offer: 70% OFF</span>
+    <span class="hidden md:inline"> for first 100 geography aspirants!</span>
+  </div>
+
+  <!-- NAVIGATION -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+          SM
+        </div>
+        <div>
+          <span class="font-extrabold text-slate-900 text-base sm:text-lg tracking-tight block">Study Master</span>
+          <span class="text-[10px] text-slate-500 tracking-wider uppercase font-semibold">UGC NET Geography JRF</span>
+        </div>
       </div>
-      <div id="authNavLoggedOut">
-        <button class="btn btn-primary" id="openLoginBtn">Login / Register</button>
-      </div>
+
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600">
+        <a href="#how-it-works" class="hover:text-indigo-600 transition-colors">How It Works</a>
+        <a href="#features" class="hover:text-indigo-600 transition-colors">Core Features</a>
+        <a href="#units" class="hover:text-indigo-600 transition-colors">Syllabus Covered</a>
+        <a href="#pricing" class="hover:text-indigo-600 transition-colors">Pricing</a>
+      </nav>
+
+      <a href="#pricing" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm transition-all transform hover:-translate-y-0.5">
+        <span>Get Template</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
     </div>
   </header>
 
-  <!-- Trial Countdown / Subscription Banner -->
-  <div class="trial-banner" id="trialBanner" style="display: none;">
-    <span id="trialBannerText">⏳ <strong>21-Day Free Trial Active</strong>: Unlimited access across all 12 stages.</span>
-    <button class="btn btn-phonepe" style="padding: 2px 10px; font-size: 0.75rem; min-height: 28px;" id="bannerUpgradeBtn">Upgrade Plan</button>
-  </div>
-
-  <main class="container">
-    <!-- Key KPIs -->
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-title">Target Exam</div>
-        <div class="metric-value" id="kpiDiscipline" style="font-size: 1.05rem;">UPSC / NEET</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-title">Total Topics</div>
-        <div class="metric-value" id="kpiTotalTopics">0</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-title">Due Today</div>
-        <div class="metric-value" style="color: var(--warning);" id="kpiDueToday">0</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-title">Overdue Reviews</div>
-        <div class="metric-value" style="color: var(--danger);" id="kpiOverdue">0</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-title">Rounds Done (R1-R12)</div>
-        <div class="metric-value" style="color: var(--success);" id="kpiRoundsDone">0</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-title">Total Delays</div>
-        <div class="metric-value" style="color: var(--danger);" id="kpiTotalDelay">0d</div>
-      </div>
-    </div>
-
-    <!-- Actions & Filter Controls -->
-    <div class="action-bar">
-      <div class="filter-group">
-        <input type="text" id="searchInput" placeholder="Search topic, subject or book..." />
-        <select id="statusFilter">
-          <option value="all">All Topics (R1 - R12)</option>
-          <option value="dueToday">Due Today</option>
-          <option value="overdue">Overdue / Delayed</option>
-          <option value="learning">Active (Study Date Set)</option>
-          <option value="queue">Queue (No Date Set)</option>
-        </select>
-      </div>
-      <div style="display: none;" id="desktopActions">
-        <button class="btn btn-secondary" id="holidayBtn">🌴 Brain Recharge</button>
-        <button class="btn btn-secondary" id="exportCsvBtn">Export 12-Stage CSV</button>
-        <button class="btn btn-primary" id="openAddTopicBtnDesktop">+ Add Topic</button>
-      </div>
-    </div>
-
-    <!-- MOBILE CARDS VIEW -->
-    <div class="mobile-cards-wrapper" id="mobileCardsBody">
-      <div style="text-align: center; color: var(--muted); padding: 2.5rem;">Loading study schedule...</div>
-    </div>
-
-    <!-- DESKTOP SPREADSHEET VIEW -->
-    <div class="desktop-table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Discipline</th>
-            <th>Unit / Subject</th>
-            <th>Topic / Chapter</th>
-            <th>1st Date</th>
-            <th>R1 (+1D)</th>
-            <th>R2 (+1W)</th>
-            <th>R3 (+2W)</th>
-            <th>R4 (+1M)</th>
-            <th>R5 (+2M)</th>
-            <th>R6 (+3M)</th>
-            <th>R7 (+5M)</th>
-            <th>R8 (+6M)</th>
-            <th>R9 (+9M)</th>
-            <th>R10 (+1Y)</th>
-            <th>R11 (+1.5Y)</th>
-            <th>R12 (+2Y)</th>
-            <th>Accumulated Delay</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="desktopTableBody">
-          <tr><td colspan="18" style="text-align: center; color: var(--muted); padding: 2.5rem;">Loading table...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
-
-  <!-- Mobile Bottom Action Bar -->
-  <div class="mobile-bottom-bar">
-    <button class="btn btn-secondary" style="flex: 1; margin-right: 6px;" id="holidayBtnMobile">🌴 Pause</button>
-    <button class="btn btn-primary" style="flex: 2;" id="openAddTopicBtnMobile">+ Add Topic</button>
-  </div>
-
-  <!-- AUTH MODAL -->
-  <div id="authModal" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="authModalTitle">Student Login</h3>
-        <button class="btn btn-secondary" style="padding: 2px 8px;" id="closeAuthModal">✕</button>
-      </div>
-      <div class="modal-tabs">
-        <div class="modal-tab active" id="tabAuthLogin">Sign In</div>
-        <div class="modal-tab" id="tabAuthRegister">Create Account</div>
-        <div class="modal-tab" id="tabAuthForgot">Forgot</div>
-      </div>
-      <form id="authForm">
-        <div class="form-group register-field hidden">
-          <label>Full Student Name *</label>
-          <input type="text" id="authName" placeholder="e.g. Umar Farooque" />
+  <!-- HERO SECTION -->
+  <section class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto space-y-6">
+        
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs sm:text-sm font-bold">
+          <i data-lucide="sparkles" class="w-4 h-4 text-indigo-600"></i>
+          <span>Built specifically for Paper 2 Geography Aspirants</span>
         </div>
-        <div class="form-row register-field hidden">
-          <div class="form-group">
-            <label>Exam / Domain *</label>
-            <input type="text" id="authDiscipline" placeholder="e.g. UPSC CSE / NEET PG / JRF" />
-          </div>
-          <div class="form-group">
-            <label> Mobile/Whatsapp No.  *</label>
-            <input type="tel" id="authPhone" placeholder="Mobile Number" />
+
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
+          Master all 61 Geography Chapters <br class="hidden sm:inline" />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600">
+            Without Memory Fade &amp; Burnout.
+          </span>
+        </h1>
+
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed font-normal max-w-2xl mx-auto">
+          The automated <strong>7-Stage Spaced Repetition</strong> Google Sheets system with an interactive dashboard, <strong>5-task daily safe cap</strong>, and vacation-mode memory protection.
+        </p>
+
+        <!-- CTA BUTTONS -->
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+          <a href="#pricing" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-lg shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            <span>Get Instant Access — Just ₹499</span>
+            <i data-lucide="zap" class="w-5 h-5 text-amber-300"></i>
+          </a>
+          <a href="#features" class="w-full sm:w-auto px-6 py-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-base rounded-2xl transition-colors flex items-center justify-center gap-2">
+            <span>Explore Dashboard</span>
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- TRUST BADGES -->
+        <div class="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-slate-500">
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Instant 1-Click Copy to Google Drive</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Works on Phone &amp; PC</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i> Lifetime Access</span>
+        </div>
+      </div>
+
+      <!-- HERO DASHBOARD PREVIEW MOCKUP -->
+      <div class="mt-12 lg:mt-16 relative max-w-5xl mx-auto">
+        <div class="rounded-3xl p-3 sm:p-5 bg-gradient-to-b from-indigo-500/20 to-slate-200/40 border border-slate-200 shadow-2xl">
+          <div class="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 p-4 text-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                <span class="ml-2 font-mono text-slate-400">Study Master - JRF (Interactive Canvas Tab)</span>
+              </div>
+              <span class="text-emerald-400 font-bold">🟢 Connected to Google Drive</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
+              <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-[10px] uppercase font-bold text-slate-400">Study Habit</div>
+                <div class="text-base sm:text-lg font-black text-emerald-400 mt-1">On Track! 🟢</div>
+                <div class="text-[10px] text-slate-400">0 non-study days</div>
+              </div>
+              <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-[10px] uppercase font-bold text-slate-400">Today's Load</div>
+                <div class="text-base sm:text-lg font-black text-indigo-400 mt-1">3 / 5 Tasks</div>
+                <div class="text-[10px] text-emerald-400">Safe Cap Active 🛡️</div>
+              </div>
+              <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-[10px] uppercase font-bold text-slate-400">Syllabus Scope</div>
+                <div class="text-base sm:text-lg font-black text-purple-400 mt-1">61 Chapters</div>
+                <div class="text-[10px] text-slate-400">10 Full Units</div>
+              </div>
+              <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-[10px] uppercase font-bold text-slate-400">Power-Up Mode</div>
+                <div class="text-base sm:text-lg font-black text-amber-400 mt-1">Clock Pauser</div>
+                <div class="text-[10px] text-slate-400">No late penalties</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label>Email Address *</label>
-          <input type="email" id="authEmail" required placeholder="name@domain.com" />
-        </div>
-        <div class="form-group" id="passwordGroup">
-          <label>Password *</label>
-          <input type="password" id="authPassword" placeholder="••••••••" />
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; height: 44px; margin-top: 0.5rem;" id="authSubmitBtn">Log In</button>
-      </form>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ADD TOPIC MODAL -->
-  <div id="topicModal" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Add Topic (2-Year Revision Track)</h3>
-        <button class="btn btn-secondary" style="padding: 2px 8px;" id="closeTopicModal">✕</button>
-      </div>
-      <form id="topicForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Exam / Discipline</label>
-            <input type="text" id="topicDiscipline" required placeholder="UPSC GS-1 / NEET Anatomy" />
-          </div>
-          <div class="form-group">
-            <label>Unit / Subject</label>
-            <input type="text" id="topicUnit" required placeholder="Polity / Pathology" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Topic / Chapter Title *</label>
-          <input type="text" id="topicName" required placeholder="Fundamental Rights & Writs" />
-        </div>
-        <div class="form-group">
-          <label>First Date Studied (Optional - Blank for Backlog)</label>
-          <input type="date" id="topicDate" />
-        </div>
-        <div class="form-group">
-          <label>Notes / Flashcard Link / PYQs</label>
-          <input type="text" id="topicNotes" placeholder="PYQs 2018-2024, High-yield points" />
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; height: 44px; margin-top: 0.5rem;">Schedule 12-Stage Plan</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- PHONEPE & UPI PAYMENT UPGRADE MODAL -->
-  <div id="profileModal" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Plan & PhonePe Payment</h3>
-        <button class="btn btn-secondary" style="padding: 2px 8px;" id="closeProfileModal">✕</button>
-      </div>
-
-      <!-- Account Status Box -->
-      <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.85rem;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
-          <span>Student:</span><strong id="profNameDisplay">Student</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
-          <span>Current Status:</span><strong id="profStatusDisplay" style="color: var(--warning);">21-Day Free Trial</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between;">
-          <span>Access Valid Until:</span><strong id="profValidUntilDisplay">--</strong>
-        </div>
-      </div>
-
-      <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Select Subscription Plan:</h4>
-
-      <!-- Plan 1: 1 Year ₹299 -->
-      <div class="pricing-card selected" id="planCard1" onclick="selectPlan('1year', 299)">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong>1-Year Unlimited Access</strong>
-            <p style="font-size: 0.75rem; color: var(--muted);">Full access to 12 revision stages for 365 days</p>
-          </div>
-          <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary);">₹299</div>
-        </div>
-      </div>
-
-      <!-- Plan 2: 2 Year ₹499 -->
-      <div class="pricing-card" id="planCard2" onclick="selectPlan('2year', 499)">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong>2-Year Comprehensive Plan (Best for UPSC/NEET)</strong>
-            <p style="font-size: 0.75rem; color: var(--muted);">Full 730-day multi-year retention cycle</p>
-          </div>
-          <div style="font-size: 1.15rem; font-weight: 700; color: var(--phonepe);">₹499</div>
-        </div>
-      </div>
-
-      <!-- PhonePe Payment Details Box -->
-      <div style="border: 2px dashed var(--phonepe); background: #faf5ff; border-radius: 8px; padding: 1rem; text-align: center; margin: 1rem 0;">
-        <p style="font-size: 0.8rem; font-weight: 700; color: var(--phonepe); text-transform: uppercase;">Pay via PhonePe / GPay / Paytm UPI</p>
-        <div style="font-size: 1.35rem; font-weight: 800; color: #3b0764; margin: 6px 0; letter-spacing: 1px;">
-          📱 7992306763
-        </div>
-        <p style="font-size: 0.75rem; color: #6b21a8; margin-bottom: 8px;">Name: <strong>Umar Farooque</strong></p>
-
-        <!-- Dynamic QR Code generated via free QR API -->
-        <div style="background: white; padding: 6px; display: inline-block; border-radius: 8px; border: 1px solid #e9d5ff;">
-          <img id="phonepeQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=7992306763@ybl&pn=Umar%20Farooque&am=299&cu=INR" alt="PhonePe QR Code" style="display:block; width:150px; height:150px;" />
-        </div>
-        <p style="font-size: 0.7rem; color: var(--muted); margin-top: 6px;">Scan with PhonePe, GPay, Paytm, or BHIM</p>
-      </div>
-
-      <!-- Step 2: Send Screenshot via WhatsApp -->
-      <div style="display:flex; flex-direction:column; gap:0.5rem;">
-        <button class="btn btn-whatsapp" style="width: 100%; height: 44px;" id="sendWhatsappBtn" onclick="sendPaymentProofOnWhatsApp()">
-          📲 Send Screenshot on WhatsApp (7992306763)
-        </button>
-        <p style="font-size: 0.72rem; color: var(--muted); text-align: center;">
-          After paying, click above to send your payment screenshot along with your email. Your plan will be activated immediately!
+  <!-- THE STUDENT PROBLEM: WHY MOST ASPIRANTS FAIL -->
+  <section class="py-16 bg-white border-y border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
+        <span class="text-xs font-bold text-rose-600 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full border border-rose-200">The Revision Trap</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Why traditional timetables fail by the 3rd week
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600">
+          The UGC NET Geography syllabus is massive. Without a systematic review formula, your hard work vanishes.
         </p>
       </div>
-    </div>
-  </div>
 
-  <!-- BRAIN RECHARGE MODAL -->
-  <div id="holidayModal" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Pause Revision Schedule</h3>
-        <button class="btn btn-secondary" style="padding: 2px 8px;" id="closeHolidayModal">✕</button>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem;">
-        Shift upcoming reviews forward to maintain your schedule during holidays or health breaks without marking them overdue.
-      </p>
-      <form id="holidayForm">
-        <div class="form-group">
-          <label>Days Off (Count)</label>
-          <input type="number" id="holidayDays" min="1" max="60" required placeholder="e.g. 5" />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+            <i data-lucide="trending-down" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">The Forgetting Curve</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            According to Hermann Ebbinghaus's cognitive memory research, students lose over <strong>70% of new concepts within 48 hours</strong> if not recalled at precise intervals.
+          </p>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; height: 44px;">Shift Pending Schedule</button>
-      </form>
+
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+            <i data-lucide="flame" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">The 20-Task Weekend Bottleneck</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Manual scheduling always leads to bottleneck days where 15+ chapters pile up on one Sunday. You skim superficially and burn out completely.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+            <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Guilt After Taking a Break</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Taking 3 days off for an exam or family event breaks typical timetables forever. Students give up entirely after falling behind.
+          </p>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- FIREBASE ENGINE SCRIPT -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword, 
-      sendPasswordResetEmail,
-      onAuthStateChanged, 
-      signOut, 
-      updateProfile 
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc, 
-      doc, 
-      setDoc,
-      getDoc,
-      updateDoc, 
-      deleteDoc, 
-      onSnapshot, 
-      query, 
-      where 
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <!-- THE SOLUTION / CORE FEATURES -->
+  <section id="features" class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-bold text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">The Complete Engine</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Engineered for permanent recall &amp; high JRF percentiles
+        </h2>
+      </div>
 
-    /* ========================================================
-       REPLACE WITH YOUR FIREBASE KEYS (console.firebase.google.com)
-       ======================================================== */
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDdYRRUz1I00iKx7DWgydE1Po7lLPahhjY",
-  authDomain: "umarfarooquein.firebaseapp.com",
-  projectId: "umarfarooquein",
-  storageBucket: "umarfarooquein.firebasestorage.app",
-  messagingSenderId: "751444177554",
-  appId: "1:751444177554:web:10f23479f6f86b35cdec4b",
-  measurementId: "G-4KVE72FYXG"
-};
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Feature 1 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-indigo-300 transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Automated 7-Round Repetition</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Enter just your first day of reading. Formulas automatically generate: Day 2, 1 Wk, 2 Wks, 1 Mo, 3 Mos, 5 Mos, and 6 Mos milestones.
+          </p>
+        </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        <!-- Feature 2 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-emerald-300 transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">5-Task Daily Safe Cap</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            A built-in visual workload limiter ensures you never have more than 5 recall reviews in a single day, protecting cognitive stamina.
+          </p>
+        </div>
 
-    const OWNER_PHONE = "7992306763";
-    const TRIAL_DAYS = 21;
+        <!-- Feature 3 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-sky-300 transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
+            <i data-lucide="calendar" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">4-Week Heatmap Forecast</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Spot intense days weeks in advance with an intensity-coded 28-day forecast. Stagger starting dates with 1-click controls.
+          </p>
+        </div>
 
-    // 12-Stage Repetition Intervals (Up to 2 Years)
-    const STAGES = [
-      { key: 'R1', days: 1 },
-      { key: 'R2', days: 7 },
-      { key: 'R3', days: 14 },
-      { key: 'R4', days: 30 },
-      { key: 'R5', days: 60 },
-      { key: 'R6', days: 90 },
-      { key: 'R7', days: 150 },
-      { key: 'R8', days: 180 },
-      { key: 'R9', days: 270 },
-      { key: 'R10', days: 365 },
-      { key: 'R11', days: 540 },
-      { key: 'R12', days: 730 }
-    ];
+        <!-- Feature 4 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-amber-300 transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Brain Recharge &amp; Power-Up Mode</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Taking time off for illness or travel? Toggle Power-Up Mode ON to freeze delay counters so your streak remains intact.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    let currentStudent = null;
-    let studentProfile = null;
-    let topicsList = [];
-    let currentAuthMode = 'login';
-    let selectedAmount = 299;
-    let selectedPlanLabel = "1-Year Plan (₹299)";
-    let unsubscribeFirestore = null;
+  <!-- SYLLABUS SECTION -->
+  <section id="units" class="py-16 bg-slate-900 text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-slate-800 px-3 py-1 rounded-full border border-slate-700">Pre-Configured &amp; Ready</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+          All 10 Official UGC NET Units Included
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400">
+          Every official topic from Geomorphology to Geographical Techniques is organized row-by-row with formula tracking.
+        </p>
+      </div>
 
-    if (window.innerWidth >= 768) {
-      document.getElementById('desktopActions').style.display = 'flex';
-      document.getElementById('desktopActions').style.gap = '0.5rem';
-    }
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 1 : Geomorphology</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 2 : Climatology</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 3 : Oceanography</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 4 : Geography of Environment</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 5 : Population &amp; Settlement</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 6 : Economic &amp; Regional Dev</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 7 : Cultural, Social &amp; Political</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 8 : Geographic Thought</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 9 : Geographical Techniques</div>
+        <div class="p-3.5 bg-slate-800 rounded-xl border border-slate-700 font-semibold">Unit 10 : Geography of India</div>
+      </div>
+    </div>
+  </section>
 
-    function addDays(dateStr, days) {
-      if (!dateStr) return null;
-      const d = new Date(dateStr);
-      d.setDate(d.getDate() + days);
-      return d.toISOString().split('T')[0];
-    }
+  <!-- PRICING CARD -->
+  <section id="pricing" class="py-16 sm:py-24 bg-slate-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-xl mx-auto space-y-3 mb-10">
+        <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Instant Access</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Invest in your JRF result today
+        </h2>
+        <p class="text-sm text-slate-600">
+          One single payment. Clones directly into your private Google Drive in 5 seconds.
+        </p>
+      </div>
 
-    function calculateDayDiff(d1Str, d2Str) {
-      return Math.floor((new Date(d1Str) - new Date(d2Str)) / (1000 * 60 * 60 * 24));
-    }
+      <div class="bg-white rounded-3xl border-2 border-indigo-600 shadow-xl overflow-hidden relative">
+        <div class="bg-indigo-600 text-white text-center py-2 text-xs font-extrabold tracking-wider uppercase">
+          ⭐ Most Popular Aspirant Choice
+        </div>
 
-    // Dynamic Plan Selector
-    window.selectPlan = (planType, amount) => {
-      selectedAmount = amount;
-      selectedPlanLabel = planType === '1year' ? '1-Year Plan (₹299)' : '2-Year Plan (₹499)';
-
-      document.getElementById('planCard1').classList.toggle('selected', planType === '1year');
-      document.getElementById('planCard2').classList.toggle('selected', planType === '2year');
-
-      // Update QR Code with exact amount
-      const upiUrl = `upi://pay?pa=${OWNER_PHONE}@ybl&pn=Umar%20Farooque&am=${amount}&cu=INR`;
-      document.getElementById('phonepeQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiUrl)}`;
-    };
-
-    // WhatsApp Direct Verification Hook
-    window.sendPaymentProofOnWhatsApp = async () => {
-      if (!currentStudent) return alert("Please log in first.");
-
-      const studentName = (studentProfile && studentProfile.fullName) || currentStudent.displayName || "Student";
-      const studentEmail = currentStudent.email || "";
-      const studentPhone = (studentProfile && studentProfile.phone) || "";
-
-      // Message sent directly to Umar Farooque's WhatsApp
-      const message = `Hello Umar Sir,%0A%0AI have paid via PhonePe for Study Master.%0A%0A📌 *Plan Selected:* ${selectedPlanLabel}%0A👤 *Name:* ${studentName}%0A📧 *Email:* ${studentEmail}%0A📱 *Registered Phone:* ${studentPhone}%0A%0APlease find the payment screenshot attached and activate my plan. Thank you!`;
-
-      // Log payment request in Firestore for Umar's dashboard
-      await updateDoc(doc(db, "students", currentStudent.uid), {
-        pendingPayment: {
-          requestedPlan: selectedPlanLabel,
-          amount: selectedAmount,
-          requestedAt: new Date().toISOString()
-        }
-      });
-
-      // Open WhatsApp Web or Mobile App
-      const waUrl = `https://wa.me/91${OWNER_PHONE}?text=${message}`;
-      window.open(waUrl, '_blank');
-    };
-
-    /* AUTH STATE OBSERVER & TRIAL VERIFICATION */
-    onAuthStateChanged(auth, async (user) => {
-      currentStudent = user;
-      if (user) {
-        document.getElementById('authNavLoggedIn').classList.remove('hidden');
-        document.getElementById('authNavLoggedOut').classList.add('hidden');
-
-        const profRef = doc(db, "students", user.uid);
-        const profSnap = await getDoc(profRef);
-
-        const now = new Date();
-        const trialEndDate = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
-        if (profSnap.exists()) {
-          studentProfile = profSnap.data();
-        } else {
-          // Initialize New Student with 21-Day Free Trial
-          studentProfile = {
-            fullName: user.displayName || 'Student',
-            email: user.email,
-            phone: '',
-            discipline: 'UPSC / IAS',
-            plan: 'Trial',
-            paymentStatus: 'Trial Active',
-            trialStartDate: now.toISOString().split('T')[0],
-            validUntil: trialEndDate,
-            createdAt: Date.now()
-          };
-          await setDoc(profRef, studentProfile);
-        }
-
-        checkSubscriptionStatus();
-        updateProfileUI();
-
-        if (unsubscribeFirestore) unsubscribeFirestore();
-        const q = query(collection(db, "study_master"), where("userId", "==", user.uid));
-        unsubscribeFirestore = onSnapshot(q, (snapshot) => {
-          topicsList = [];
-          snapshot.forEach(docSnap => topicsList.push({ id: docSnap.id, ...docSnap.data() }));
-          renderViews();
-        });
-      } else {
-        if (unsubscribeFirestore) unsubscribeFirestore();
-        studentProfile = null;
-        topicsList = [];
-        document.getElementById('trialBanner').style.display = 'none';
-        document.getElementById('authNavLoggedIn').classList.add('hidden');
-        document.getElementById('authNavLoggedOut').classList.remove('hidden');
-        renderViews();
-      }
-    });
-
-    // Check if 21-Day Trial is active or expired
-    function checkSubscriptionStatus() {
-      if (!studentProfile) return;
-      const today = new Date().toISOString().split('T')[0];
-      const validUntil = studentProfile.validUntil || today;
-      const banner = document.getElementById('trialBanner');
-      const bannerText = document.getElementById('trialBannerText');
-      const badge = document.getElementById('planBadge');
-
-      banner.style.display = 'flex';
-
-      if (studentProfile.plan === 'Pro' || studentProfile.paymentStatus === 'Paid') {
-        badge.className = 'badge badge-pro';
-        badge.textContent = studentProfile.planTitle || 'Pro Member';
-        banner.style.display = 'none'; // No need for nag banner if paid
-      } else {
-        const daysLeft = calculateDayDiff(validUntil, today);
-
-        if (daysLeft >= 0) {
-          badge.className = 'badge badge-trial';
-          badge.textContent = `${daysLeft}d Trial Left`;
-          banner.className = 'trial-banner';
-          bannerText.innerHTML = `⏳ <strong>21-Day Free Trial Active</strong>: You have <strong>${daysLeft} days remaining</strong>. Upgrade to 1 or 2-Year plan via PhonePe.`;
-        } else {
-          badge.className = 'badge badge-expired';
-          badge.textContent = 'Trial Expired';
-          banner.className = 'trial-banner expired';
-          bannerText.innerHTML = `⚠️ <strong>Your 21-Day Free Trial has expired</strong>. Please pay ₹299 (1 Year) or ₹499 (2 Year) on PhonePe (7992306763) to continue.`;
-        }
-      }
-    }
-
-    /* AUTH ACTIONS */
-    function setAuthMode(m) {
-      currentAuthMode = m;
-      document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-      const regFields = document.querySelectorAll('.register-field');
-      const passGroup = document.getElementById('passwordGroup');
-      const submitBtn = document.getElementById('authSubmitBtn');
-
-      if (m === 'login') {
-        document.getElementById('tabAuthLogin').classList.add('active');
-        document.getElementById('authModalTitle').textContent = 'Student Login';
-        regFields.forEach(f => f.classList.add('hidden'));
-        passGroup.classList.remove('hidden');
-        submitBtn.textContent = 'Log In';
-      } else if (m === 'register') {
-        document.getElementById('tabAuthRegister').classList.add('active');
-        document.getElementById('authModalTitle').textContent = 'Create Student Account';
-        regFields.forEach(f => f.classList.remove('hidden'));
-        passGroup.classList.remove('hidden');
-        submitBtn.textContent = 'Start 21-Day Free Trial';
-      } else {
-        document.getElementById('tabAuthForgot').classList.add('active');
-        document.getElementById('authModalTitle').textContent = 'Reset Password';
-        regFields.forEach(f => f.classList.add('hidden'));
-        passGroup.classList.add('hidden');
-        submitBtn.textContent = 'Send Reset Email';
-      }
-    }
-
-    document.getElementById('tabAuthLogin').onclick = () => setAuthMode('login');
-    document.getElementById('tabAuthRegister').onclick = () => setAuthMode('register');
-    document.getElementById('tabAuthForgot').onclick = () => setAuthMode('forgot');
-
-    document.getElementById('authForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('authEmail').value.trim();
-      const pass = document.getElementById('authPassword').value;
-
-      try {
-        if (currentAuthMode === 'login') {
-          await signInWithEmailAndPassword(auth, email, pass);
-        } else if (currentAuthMode === 'register') {
-          const name = document.getElementById('authName').value.trim() || 'Student';
-          const disc = document.getElementById('authDiscipline').value.trim() || 'UPSC';
-          const phone = document.getElementById('authPhone').value.trim();
-
-          const cred = await createUserWithEmailAndPassword(auth, email, pass);
-          await updateProfile(cred.user, { displayName: name });
-
-          const now = new Date();
-          const trialEnd = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
-          await setDoc(doc(db, "students", cred.user.uid), {
-            fullName: name,
-            email,
-            phone,
-            discipline: disc,
-            plan: 'Trial',
-            paymentStatus: 'Trial Active',
-            trialStartDate: now.toISOString().split('T')[0],
-            validUntil: trialEnd,
-            createdAt: Date.now()
-          });
-        } else {
-          await sendPasswordResetEmail(auth, email);
-          alert('Password reset link sent to ' + email);
-          setAuthMode('login');
-          return;
-        }
-        document.getElementById('authModal').classList.add('hidden');
-        document.getElementById('authForm').reset();
-      } catch (err) {
-        alert(err.message);
-      }
-    };
-
-    document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
-    /* CHECK IF STUDENT CAN ADD TOPICS */
-    function checkCanEdit() {
-      if (!currentStudent) {
-        alert('Please log in first.');
-        return false;
-      }
-      const today = new Date().toISOString().split('T')[0];
-      const validUntil = (studentProfile && studentProfile.validUntil) || today;
-
-      if (studentProfile && (studentProfile.plan === 'Pro' || studentProfile.paymentStatus === 'Paid')) {
-        return true;
-      }
-      if (calculateDayDiff(validUntil, today) < 0) {
-        alert('Your 21-Day Free Trial has expired. Please upgrade via PhonePe (7992306763) to continue editing topics.');
-        document.getElementById('profileModal').classList.remove('hidden');
-        return false;
-      }
-      return true;
-    }
-
-    /* TOPIC ENGINE */
-    document.getElementById('topicForm').onsubmit = async (e) => {
-      e.preventDefault();
-      if (!checkCanEdit()) return;
-
-      const discipline = document.getElementById('topicDiscipline').value.trim();
-      const unit = document.getElementById('topicUnit').value.trim();
-      const topicName = document.getElementById('topicName').value.trim();
-      const firstDate = document.getElementById('topicDate').value || null;
-      const notes = document.getElementById('topicNotes').value.trim();
-
-      const revisions = {};
-      STAGES.forEach(s => {
-        revisions[s.key] = {
-          targetDate: firstDate ? addDays(firstDate, s.days) : null,
-          done: false,
-          dateCompleted: null,
-          delayDays: 0
-        };
-      });
-
-      await addDoc(collection(db, "study_master"), {
-        userId: currentStudent.uid,
-        discipline,
-        unit,
-        topicName,
-        firstDate,
-        notes,
-        revisions,
-        totalAccumulatedDelay: 0,
-        createdAt: Date.now()
-      });
-
-      document.getElementById('topicModal').classList.add('hidden');
-      document.getElementById('topicForm').reset();
-    };
-
-    /* TOGGLE REVISION */
-    window.toggleStage = async (topicId, stageKey) => {
-      if (!checkCanEdit()) return;
-
-      const topic = topicsList.find(t => t.id === topicId);
-      if (!topic) return;
-
-      const today = new Date().toISOString().split('T')[0];
-      const revs = { ...topic.revisions };
-      const current = revs[stageKey];
-
-      let updatedFirstDate = topic.firstDate;
-      if (!topic.firstDate) {
-        updatedFirstDate = today;
-        STAGES.forEach(s => revs[s.key].targetDate = addDays(today, s.days));
-      }
-
-      const isMarkingDone = !current.done;
-      current.done = isMarkingDone;
-      current.dateCompleted = isMarkingDone ? today : null;
-
-      if (isMarkingDone && current.targetDate) {
-        const diff = calculateDayDiff(today, current.targetDate);
-        current.delayDays = diff > 0 ? diff : 0;
-      } else {
-        current.delayDays = 0;
-      }
-
-      let sumDelays = 0;
-      Object.values(revs).forEach(r => sumDelays += (r.delayDays || 0));
-
-      await updateDoc(doc(db, "study_master", topicId), {
-        firstDate: updatedFirstDate,
-        revisions: revs,
-        totalAccumulatedDelay: sumDelays
-      });
-    };
-
-    window.removeTopic = async (topicId) => {
-      if (!checkCanEdit()) return;
-      if (confirm('Delete this chapter from Study Master?')) {
-        await deleteDoc(doc(db, "study_master", topicId));
-      }
-    };
-
-    /* RENDER VIEWS */
-    function renderViews() {
-      const mobileBody = document.getElementById('mobileCardsBody');
-      const desktopBody = document.getElementById('desktopTableBody');
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const status = document.getElementById('statusFilter').value;
-      const today = new Date().toISOString().split('T')[0];
-
-      mobileBody.innerHTML = '';
-      desktopBody.innerHTML = '';
-
-      if (!currentStudent) {
-        const emptyMsg = `<div style="text-align: center; color: var(--muted); padding: 3rem;">Please log in or register to start your 21-Day Free Trial.</div>`;
-        mobileBody.innerHTML = emptyMsg;
-        desktopBody.innerHTML = `<tr><td colspan="18" style="text-align:center; padding:3rem; color:var(--muted);">Please log in.</td></tr>`;
-        refreshMetrics([]);
-        return;
-      }
-
-      const filtered = topicsList.filter(t => {
-
-        const matchesSearch = (t.topicName || '').toLowerCase().includes(search) || (t.unit || '').toLowerCase().includes(search);
-        let matchesStatus = true;
-        if (status === 'queue') matchesStatus = !t.firstDate;
-        if (status === 'learning') matchesStatus = !!t.firstDate;
-        if (status === 'dueToday') matchesStatus = Object.values(t.revisions || {}).some(r => !r.done && r.targetDate === today);
-        if (status === 'overdue') matchesStatus = Object.values(t.revisions || {}).some(r => !r.done && r.targetDate && r.targetDate < today);
-        return matchesSearch && matchesStatus;
-      });
-
-      filtered.forEach(t => {
-        let mobileTrackHtml = '';
-        let desktopStagesHtml = '';
-
-        STAGES.forEach(s => {
-          const rev = (t.revisions && t.revisions[s.key]) ? t.revisions[s.key] : { targetDate: null, done: false, delayDays: 0 };
-          let pillClass = '';
-          let pillText = rev.targetDate || 'Queue';
-          let delayText = '';
-
-          if (rev.done) {
-            pillClass = 'done';
-            pillText = '✓ ' + (rev.dateCompleted || 'Done');
-            if (rev.delayDays > 0) delayText = `<span class="delay-pill-text">+${rev.delayDays}d</span>`;
-          } else if (!rev.targetDate) {
-            pillClass = 'backlog';
-            pillText = 'Queue';
-          } else if (rev.targetDate === today) {
-            pillClass = 'due-today';
-            pillText = 'Due Today';
-          } else if (rev.targetDate < today) {
-            pillClass = 'overdue';
-            const curDelay = calculateDayDiff(today, rev.targetDate);
-            pillText = 'Overdue';
-            delayText = `<span class="delay-pill-text">+${curDelay}d</span>`;
-          }
-
-          const pillHtml = `
-            <div class="stage-pill ${pillClass}" onclick="window.toggleStage('${t.id}', '${s.key}')">
-              <strong>${s.key}</strong>
-              <span>${pillText}</span>
-              ${delayText}
-            </div>
-          `;
-
-          mobileTrackHtml += pillHtml;
-          desktopStagesHtml += `<td>${pillHtml}</td>`;
-        });
-
-        // Mobile Card
-        const card = document.createElement('div');
-        card.className = 'topic-card';
-        card.innerHTML = `
-          <div class="topic-card-header">
+        <div class="p-6 sm:p-10 space-y-8">
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-slate-100 pb-6">
             <div>
-              <div class="topic-discipline">${t.discipline} • ${t.unit}</div>
-              <div class="topic-name">${t.topicName}</div>
+              <h3 class="text-xl sm:text-2xl font-black text-slate-900">UGC NET Geography Study Master</h3>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">Complete Spaced Repetition Engine + Interactive Canvas</p>
             </div>
-            <button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.7rem; min-height: 28px;" onclick="window.removeTopic('${t.id}')">✕</button>
+            <div class="text-left sm:text-right">
+              <div class="flex items-baseline gap-2">
+                <span class="text-3xl sm:text-5xl font-black text-slate-900 font-mono">₹499</span>
+                <span class="text-base sm:text-lg text-slate-400 line-through font-mono">₹1,999</span>
+              </div>
+              <span class="text-xs font-bold text-emerald-600">You Save 75% • One-time fee</span>
+            </div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--muted); display:flex; justify-content:space-between;">
-            <span>Started: ${t.firstDate || 'In Backlog'}</span>
-            <span style="color: ${t.totalAccumulatedDelay > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight: 600;">Delay: ${t.totalAccumulatedDelay || 0}d</span>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs sm:text-sm text-slate-700">
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> 61 Pre-loaded UGC NET Geography chapters</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> 7 Spaced Review Milestones (Day 2 to 6 Mos)</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> 5-Task Safe Cap Workload Indicator</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> 4-Week Daily Workload Forecast Heatmap</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> Brain Recharge Vacation Mode (Pause Penalties)</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> Dynamic Syllabus Pacing &amp; Exam Predictor</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> 100% Private in your own Google Drive</div>
+            <div class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i> Free updates &amp; formula support</div>
           </div>
-          <div class="revisions-track">
-            ${mobileTrackHtml}
+
+          <!-- CHECKOUT ACTION -->
+          <div class="space-y-3 pt-2">
+            <!-- REPLACE WITH YOUR RAZORPAY PAYMENT LINK -->
+            <a 
+              href="https://rzp.io/l/YOUR_RAZORPAY_PAYMENT_LINK" 
+              class="w-full py-4 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
+            >
+              <span>Pay with UPI / Card (Instant Download)</span>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
+
+            <div class="flex items-center justify-center gap-4 text-xs text-slate-500 font-medium pt-2">
+              <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i> 100% Secure Checkout</span>
+              <span>•</span>
+              <span>UPI, Google Pay, PhonePe, Cards Accepted</span>
+            </div>
           </div>
-        `;
-        mobileBody.appendChild(card);
+        </div>
+      </div>
+    </div>
+  </section>
 
-        // Desktop Row
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${t.discipline}</strong></td>
-          <td>${t.unit}</td>
-          <td>${t.topicName}</td>
-          <td>${t.firstDate || '<span style="color:var(--muted);">Backlog</span>'}</td>
-          ${desktopStagesHtml}
-          <td><strong style="color:${t.totalAccumulatedDelay > 0 ? 'var(--danger)':'var(--success)'}">${t.totalAccumulatedDelay || 0}d</strong></td>
-          <td><button class="btn btn-danger" style="padding: 2px 6px; font-size: 0.75rem;" onclick="window.removeTopic('${t.id}')">Delete</button></td>
-        `;
-        desktopBody.appendChild(tr);
-      });
+  <!-- FAQ SECTION -->
+  <section class="py-16 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="text-center space-y-2">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Frequently Asked Questions</h2>
+        <p class="text-xs sm:text-sm text-slate-500">Everything you need to know about the Study Master template.</p>
+      </div>
 
-      refreshMetrics(topicsList);
-    }
+      <div class="space-y-4 text-sm">
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <h4 class="font-bold text-slate-900">How do I receive the template after paying?</h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Immediately upon successful payment, you are redirected to a Google Drive link. When you click it, Google Sheets automatically creates a <strong>clean, private copy</strong> directly into your personal Google Drive account.
+          </p>
+        </div>
 
-    function refreshMetrics(list) {
-      const today = new Date().toISOString().split('T')[0];
-      let dueToday = 0, overdue = 0, roundsDone = 0, totalDelay = 0;
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <h4 class="font-bold text-slate-900">Do I need to pay any monthly subscription?</h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            No. It is a <strong>one-time payment of ₹499</strong>. You own the copy forever, with zero monthly recurring charges.
+          </p>
+        </div>
 
-      list.forEach(t => {
-        totalDelay += (t.totalAccumulatedDelay || 0);
-        Object.values(t.revisions || {}).forEach(r => {
-          if (r.done) roundsDone++;
-          else if (r.targetDate === today) dueToday++;
-          else if (r.targetDate && r.targetDate < today) overdue++;
-        });
-      });
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <h4 class="font-bold text-slate-900">Can I access it on my mobile phone?</h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Yes! It works seamlessly inside the free Google Sheets mobile app on Android and iPhone, as well as on any web browser on your laptop.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      document.getElementById('kpiDiscipline').textContent = studentProfile ? studentProfile.discipline : 'UPSC / NEET';
-      document.getElementById('kpiTotalTopics').textContent = list.length;
-      document.getElementById('kpiDueToday').textContent = dueToday;
-      document.getElementById('kpiOverdue').textContent = overdue;
-      document.getElementById('kpiRoundsDone').textContent = roundsDone;
-      document.getElementById('kpiTotalDelay').textContent = totalDelay + 'd';
-    }
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-semibold text-white">Created by Umar Farooque (<a href="https://umarfarooque.in" class="text-indigo-400 hover:underline">umarfarooque.in</a>)</p>
+        <p class="mt-0.5">Empowering UGC NET Geography &amp; JRF Aspirants across India.</p>
+      </div>
+      <div>
+        <p>Support: <a href="mailto:inumarfarooque@gmail.com" class="text-slate-300 hover:underline">inumarfarooque@gmail.com</a></p>
+      </div>
+    </div>
+  </footer>
 
-    function updateProfileUI() {
-      if (!studentProfile) return;
-      document.getElementById('profNameDisplay').textContent = studentProfile.fullName || 'Student';
-      document.getElementById('profStatusDisplay').textContent = studentProfile.plan === 'Pro' ? (studentProfile.planTitle || 'Pro Member (Paid)') : '21-Day Free Trial';
-      document.getElementById('profValidUntilDisplay').textContent = studentProfile.validUntil || '--';
-    }
-
-    /* BRAIN RECHARGE */
-    document.getElementById('holidayForm').onsubmit = async (e) => {
-      e.preventDefault();
-      if (!checkCanEdit()) return;
-
-      const days = parseInt(document.getElementById('holidayDays').value);
-      if (!days) return;
-
-      for (const t of topicsList) {
-        const revs = { ...t.revisions };
-        let mod = false;
-        Object.keys(revs).forEach(k => {
-          if (!revs[k].done && revs[k].targetDate) {
-            revs[k].targetDate = addDays(revs[k].targetDate, days);
-            mod = true;
-          }
-        });
-        if (mod) await updateDoc(doc(db, "study_master", t.id), { revisions: revs });
-      }
-      alert(`Schedule shifted by +${days} days across all active topics.`);
-      document.getElementById('holidayModal').classList.add('hidden');
-    };
-
-    /* EXPORT 12-STAGE CSV */
-    document.getElementById('exportCsvBtn').onclick = () => {
-      if (!topicsList.length) return alert('No topics to export.');
-      let csv = 'Discipline,Unit,Topic,First Date,R1,R2,R3,R4,R5,R6,R7,R8,R9,R10,R11,R12,Total Delay Days,Notes\n';
-
-      topicsList.forEach(t => {
-        const revArr = STAGES.map(s => {
-          const r = t.revisions ? t.revisions[s.key] : null;
-          return r ? (r.done ? `Done (${r.dateCompleted})` : `Due (${r.targetDate || 'Queue'})`) : 'N/A';
-        });
-
-        const row = [
-          `"${t.discipline}"`, `"${t.unit}"`, `"${t.topicName}"`, t.firstDate || 'Backlog',
-          ...revArr,
-          t.totalAccumulatedDelay || 0,
-          `"${t.notes || ''}"`
-        ];
-        csv += row.join(',') + '\n';
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `Study_Master_${studentProfile ? studentProfile.fullName : 'Export'}.csv`;
-      a.click();
-    };
-
-    /* MODAL WIRING */
-    document.getElementById('openLoginBtn').onclick = () => { setAuthMode('login'); document.getElementById('authModal').classList.remove('hidden'); };
-    document.getElementById('closeAuthModal').onclick = () => document.getElementById('authModal').classList.add('hidden');
-    
-    const openAdd = () => {
-      if (!checkCanEdit()) return;
-      document.getElementById('topicModal').classList.remove('hidden');
-    };
-    document.getElementById('openAddTopicBtnMobile').onclick = openAdd;
-    if (document.getElementById('openAddTopicBtnDesktop')) document.getElementById('openAddTopicBtnDesktop').onclick = openAdd;
-    document.getElementById('closeTopicModal').onclick = () => document.getElementById('topicModal').classList.add('hidden');
-
-    const openHoliday = () => {
-      if (!checkCanEdit()) return;
-      document.getElementById('holidayModal').classList.remove('hidden');
-    };
-    document.getElementById('holidayBtnMobile').onclick = openHoliday;
-    if (document.getElementById('holidayBtn')) document.getElementById('holidayBtn').onclick = openHoliday;
-    document.getElementById('closeHolidayModal').onclick = () => document.getElementById('holidayModal').classList.add('hidden');
-
-    document.getElementById('profileBtn').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
-    document.getElementById('bannerUpgradeBtn').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
-    document.getElementById('closeProfileModal').onclick = () => document.getElementById('profileModal').classList.add('hidden');
-    document.getElementById('searchInput').oninput = renderViews;
-    document.getElementById('statusFilter').onchange = renderViews;
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
   </script>
 </body>
 </html>
