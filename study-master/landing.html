@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Study Master | The Secret 12-Stage Revision System of Exam Toppers</title>
+  <meta name="description" content="Never forget what you read. Built on cognitive neuroscience, Study Master automates your 12-stage spaced repetition schedule for UGC NET, UPSC, NEET, and competitive exams." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.2);
+      --phonepe: #5f259f;
+      --surface: #ffffff;
+      --surface-subtle: #f8fafc;
+      --background: #090d16;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+      --success: #10b981;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--background); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+    /* Container */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Nav */
+    header {
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 1rem 0;
+    }
+    .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.25rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .logo span { color: #60a5fa; }
+
+    /* Buttons */
+    .btn {
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5); }
+    .btn-secondary { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+    .btn-secondary:hover { background: #334155; }
+    .btn-accent {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0f172a;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-accent:hover { transform: translateY(-2px); }
+
+    /* Badges */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+    }
+    .pill-glow { background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(96, 165, 250, 0.3); color: #93c5fd; }
+
+    /* Hero */
+    .hero {
+      padding: 4.5rem 0 3.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 span.gradient-text {
+      background: linear-gradient(135deg, #60a5fa 20%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 2rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
+
+    /* Proof Metrics */
+    .proof-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    .proof-stat { font-size: 1.8rem; font-weight: 800; color: #fff; }
+    .proof-stat span { color: #60a5fa; }
+    .proof-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* The Problem Section */
+    .section { padding: 4.5rem 0; }
+    .section-title { text-align: center; max-width: 680px; margin: 0 auto 3rem; }
+    .section-title h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.8rem; }
+    .section-title p { color: var(--text-muted); font-size: 1.05rem; }
+
+    .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all 0.3s;
+    }
+    .card:hover { border-color: #3b82f6; transform: translateY(-3px); }
+    .card-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff; }
+    .card p { font-size: 0.92rem; color: var(--text-muted); }
+
+    /* 12 Stages System */
+    .stages-track {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .stage-item {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      position: relative;
+    }
+    .stage-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #60a5fa;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .stage-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .stage-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Pricing Section */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.75rem; }
+    .price-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem 1.75rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .price-card.featured {
+      border-color: #60a5fa;
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, #0f172a 100%);
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+    }
+    .popular-tag {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .price-title { font-size: 1.3rem; font-weight: 800; color: #fff; }
+    .price-amount { font-size: 3rem; font-weight: 800; color: #fff; margin: 1rem 0; line-height: 1; }
+    .price-amount span { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
+    .price-features { list-style: none; margin: 1.5rem 0; flex: 1; }
+    .price-features li {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-features li::before { content: "✓"; color: #34d399; font-weight: 800; }
+
+    /* Guarantee & Contact */
+    .cta-banner {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      border: 1px solid #3b82f6;
+      border-radius: 20px;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      margin: 4rem 0;
+    }
+    .cta-banner h2 { font-size: 2.2rem; margin-bottom: 1rem; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    footer a { color: #60a5fa; text-decoration: none; }
+
+    /* Modal for Quick Payment Popup */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(5px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; padding: 1rem;
+    }
+    .hidden { display: none !important; }
+    .modal-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      padding: 1.75rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="#" class="logo">
+        <span>🎯</span> StudyMaster
+      </a>
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <a href="https://umarfarooque.in/study-master/" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Student Login</a>
+        <a href="#pricing" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Start 21-Day Trial</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="pill pill-glow">🧠 Cognitive Neuroscience Meets Competitive Exams</div>
+      <h1>
+        Stop Forgetting What You Study.<br />
+        <span class="gradient-text">Master The 12-Stage Revision Secret</span><br />
+        Used by Top 1% Rankers.
+      </h1>
+      <p>
+        The human brain forgets 80% of what it reads within 48 hours. Study Master eliminates syllabus decay with an automated 2-year spaced recall schedule designed for UGC NET, UPSC, NEET & State PCS aspirants.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://umarfarooque.in/study-master/" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+          🚀 Start Your 21-Day Free Trial
+        </a>
+        <a href="#how-it-works" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+          See How It Works ↓
+        </a>
+      </div>
+
+      <!-- Social & Academic Proof -->
+      <div class="proof-bar">
+        <div>
+          <div class="proof-stat">12 <span>Stages</span></div>
+          <div class="proof-label">Up to 2-Year Long-Term Neural Recall</div>
+        </div>
+        <div>
+          <div class="proof-stat">21 <span>Days</span></div>
+          <div class="proof-label">Full-Access Free Trial (No Card Needed)</div>
+        </div>
+        <div>
+          <div class="proof-stat">100% <span>Sync</span></div>
+          <div class="proof-label">Mobile, Tablet & Desktop Auto Cloud Sync</div>
+        </div>
+        <div>
+          <div class="proof-stat">0 <span>Penalties</span></div>
+          <div class="proof-label">Vacation & Brain Recharge Pause Mode</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Brutal Problem -->
+  <section class="section" style="background: #060910;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Why 95% of Aspirants Fail Despite 10-Hour Study Days</h2>
+        <p>Hard work without systematic memory retrieval is wasted energy. Here is why conventional revision schedules break down:</p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="card">
+          <div class="card-icon">📉</div>
+          <h3>The Ebbinghaus Trap</h3>
+          <p>By Day 7, your brain retains only 20% of a chapter. Without immediate, scientifically timed active recall prompts, you are practically re-reading from scratch every month.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌪️</div>
+          <h3>The "Revision Chaos" Loop</h3>
+          <p>Students study new topics while neglecting older ones. Soon, 40+ backlogged chapters pile up, causing panic, anxiety, and syllabus abandonment right before exam day.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏖️</div>
+          <h3>The Vacation Disruption</h3>
+          <p>One illness or festival break ruins your revision timetable. Traditional planners have no dynamic offset feature, leaving you permanently behind and demotivated.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The 12-Stage Science -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-title">
+        <h2>The 12-Stage Topper's Algorithm</h2>
+        <p>Study Master automatically calculates, tracks, and reminds you when each chapter must be revised over a complete 2-year preparation cycle.</p>
+      </div>
+
+      <div class="stages-track">
+        <div class="stage-item">
+          <div class="stage-tag">Stage 1 • +1 Day</div>
+          <div class="stage-title">Mind Dump & Recall</div>
+          <div class="stage-desc">Stops 24-hr neural decay instantly.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 2 • +7 Days</div>
+          <div class="stage-title">High-Yield Synopsis</div>
+          <div class="stage-desc">Consolidates core definitions.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 3 • +14 Days</div>
+          <div class="stage-title">Flashcard Active Drill</div>
+          <div class="stage-desc">Reinforces memory pathways.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 4 • +1 Month</div>
+          <div class="stage-title">PYQ Application</div>
+          <div class="stage-desc">Solves real previous year questions.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 5 • +2 Months</div>
+          <div class="stage-title">Mistake Notebook</div>
+          <div class="stage-desc">Corrects conceptual blindspots.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 6 • +3 Months</div>
+          <div class="stage-title">Sectional Mock Test</div>
+          <div class="stage-desc">Cross-links with broader syllabus.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 7 • +5 Months</div>
+          <div class="stage-title">Rapid Formula Drill</div>
+          <div class="stage-desc">Quick facts, dates & articles recall.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 8 • +6 Months</div>
+          <div class="stage-title">Half-Year Assessment</div>
+          <div class="stage-desc">Permanent long-term memory lock.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 9 • +9 Months</div>
+          <div class="stage-title">Mains & Clinical Link</div>
+          <div class="stage-desc">Current affairs & interlinking.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 10 • +1 Year</div>
+          <div class="stage-title">Annual Comprehensive</div>
+          <div class="stage-desc">Full subject memory retention check.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 11 • +1.5 Years</div>
+          <div class="stage-title">Pre-Exam Speed Drill</div>
+          <div class="stage-desc">Option elimination & speed mastery.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-tag">Stage 12 • +2 Years</div>
+          <div class="stage-title">Final Exam Readiness</div>
+          <div class="stage-desc">Peak retention ready for Rank 1.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breakthrough Features -->
+  <section class="section" style="background: #060910;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Engineered for Serious Aspirants</h2>
+        <p>No spreadsheets to format. No manual math. Just input your topic and execute.</p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="card">
+          <div class="card-icon">🌴</div>
+          <h3>Brain Recharge & Vacation Pause</h3>
+          <p>Taking 5 days off for travel or rest? Tap one button to shift all pending dates forward automatically without accumulating late penalties.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⏱️</div>
+          <h3>Dynamic Delay Tracking</h3>
+          <p>If you complete a revision 3 days late, the system records it transparently so you know exactly where your discipline stands at all times.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>True Mobile First Interface</h3>
+          <p>Swipe through all 12 stages on your smartphone with thumb-friendly buttons. Syncs automatically with your laptop in real time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Table -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-title">
+        <h2>Transparent, Student-Friendly Investment</h2>
+        <p>Start completely free. Upgrade anytime with PhonePe / UPI to secure your multi-year preparation.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- 21-Day Free Trial -->
+        <div class="price-card">
+          <div class="price-title">21-Day Free Trial</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Experience the complete 12-stage system risk-free</p>
+          <div class="price-amount">₹0 <span>/ 21 Days</span></div>
+          <ul class="price-features">
+            <li>Full 12-Stage Spaced Repetition Engine</li>
+            <li>Unlimited Chapters & Subjects</li>
+            <li>Real-time Cross-Device Cloud Sync</li>
+            <li>Brain Recharge Vacation Pause Mode</li>
+            <li>No Credit Card / UPI Required to Start</li>
+          </ul>
+          <a href="https://umarfarooque.in/study-master/" class="btn btn-secondary" style="width: 100%;">Get Started Free</a>
+        </div>
+
+        <!-- 1-Year Plan -->
+        <div class="price-card">
+          <div class="price-title">1-Year All Access</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Ideal for UGC NET, GATE & 1-Year Exam Cycles</p>
+          <div class="price-amount">₹299 <span>/ Year</span></div>
+          <ul class="price-features">
+            <li>Everything in Free Trial</li>
+            <li>365 Days of Guaranteed Access</li>
+            <li>Delay & Discipline Scorecard Analytics</li>
+            <li>CSV Export for Physical Printouts</li>
+            <li>Priority WhatsApp Support</li>
+          </ul>
+          <button class="btn btn-primary" style="width: 100%;" onclick="openPaymentModal('1-Year Plan', 299)">Pay ₹299 via PhonePe</button>
+        </div>
+
+        <!-- 2-Year Plan -->
+        <div class="price-card featured">
+          <div class="popular-tag">Most Recommended for UPSC & NEET</div>
+          <div class="price-title">2-Year Master Plan</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Complete 730-day coverage for multi-year prep</p>
+          <div class="price-amount">₹499 <span>/ 2 Years</span></div>
+          <ul class="price-features">
+            <li>Complete 730-Day Long-Term Retention</li>
+            <li>Full 12-Stage Mastery Algorithm</li>
+            <li>Unlimited Disciplines (GS, Optional, CSAT)</li>
+            <li>Lifetime CSV Backup Rights</li>
+            <li>Direct WhatsApp Mentorship Channel</li>
+          </ul>
+          <button class="btn btn-accent" style="width: 100%; font-weight: 800;" onclick="openPaymentModal('2-Year Master Plan', 499)">Pay ₹499 via PhonePe</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <div class="container">
+    <div class="cta-banner">
+      <h2>Transform Your Preparation Today</h2>
+      <p style="color: #cbd5e1; max-width: 600px; margin: 0 auto 1.75rem;">
+        Do not let another month of hard work fade away into forgotten pages. Activate your 12-stage spaced repetition schedule now.
+      </p>
+      <a href="https://umarfarooque.in/study-master/" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2.2rem;">
+        Start 21-Day Free Trial →
+      </a>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <section class="section">
+    <div class="container" style="max-width: 800px;">
+      <div class="section-title">
+        <h2>Frequently Asked Questions</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="card">
+          <h3>Does this work for my specific exam?</h3>
+          <p>Yes. Study Master is discipline-agnostic. Whether you are preparing for UGC NET Geography, UPSC Civil Services, NEET PG/UG, GATE, or Judiciary, you can customize your own Units, Modules, and Chapters.</p>
+        </div>
+        <div class="card">
+          <h3>How does PhonePe / UPI payment activation work?</h3>
+          <p>Simply scan the QR code or pay to <strong>7992306763</strong> (Umar Farooque). Send a screenshot of your payment via WhatsApp to the same number, and your plan will be activated within minutes.</p>
+        </div>
+        <div class="card">
+          <h3>What happens after the 21-day trial?</h3>
+          <p>Your topics and progress remain safely stored in the cloud. You simply upgrade to either the 1-Year (₹299) or 2-Year (₹499) plan to continue adding and editing revisions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 Study Master • Developed by <a href="https://umarfarooque.in">Umar Farooque</a></p>
+      <p style="margin-top: 6px; font-size: 0.75rem; color: #64748b;">
+        Contact / Support / Payments: <strong>+91 7992306763</strong>
+      </p>
+    </div>
+  </footer>
+
+  <!-- PhonePe / UPI Payment Popup Modal -->
+  <div id="paymentModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+        <h3 id="modalPlanTitle" style="color:#fff; font-size:1.15rem;">Upgrade Plan</h3>
+        <button onclick="closePaymentModal()" style="background:none; border:none; color:#94a3b8; font-size:1.25rem; cursor:pointer;">✕</button>
+      </div>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 1rem;">
+        Pay via PhonePe / Google Pay / Paytm UPI
+      </p>
+
+      <div style="border: 2px dashed #a855f7; background: rgba(95, 37, 159, 0.1); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: #c084fc; letter-spacing: 1px;">
+          📱 7992306763
+        </div>
+        <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 4px;">Name: <strong>Umar Farooque</strong></p>
+
+        <!-- Dynamic QR -->
+        <div style="background: white; padding: 8px; border-radius: 8px; display: inline-block; margin: 12px 0;">
+          <img id="modalQrCode" src="" alt="PhonePe QR Code" style="display:block; width:160px; height:160px;" />
+        </div>
+        <p style="font-size: 0.75rem; color: #94a3b8;" id="modalAmountLabel">Amount: ₹299</p>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; background: #25d366; border-color: #25d366; font-size: 0.95rem; margin-bottom: 0.5rem;" onclick="sendProofWhatsApp()">
+        📲 Send Screenshot on WhatsApp
+      </button>
+      <p style="font-size: 0.72rem; color: #64748b;">
+        Send receipt to 7992306763 with your registered email for instant plan activation.
+      </p>
+    </div>
+  </div>
+
+  <!-- Modal Script -->
+  <script>
+    let activePlan = "1-Year Plan";
+    let activePrice = 299;
+
+    function openPaymentModal(plan, price) {
+      activePlan = plan;
+      activePrice = price;
+      document.getElementById('modalPlanTitle').textContent = `Upgrade to ${plan}`;
+      document.getElementById('modalAmountLabel').textContent = `Total Amount: ₹${price} (No Hidden Charges)`;
+
+      // Generate UPI QR Code URL
+      const upiUrl = `upi://pay?pa=7992306763@ybl&pn=Umar%20Farooque&am=${price}&cu=INR`;
+      document.getElementById('modalQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
+
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    function sendProofWhatsApp() {
+      const msg = `Hello Umar Sir,%0A%0AI have made the PhonePe payment for Study Master.%0A%0A📌 *Plan:* ${activePlan} (₹${activePrice})%0A📱 *UPI Number Paid:* 7992306763%0A%0APlease find my payment screenshot attached and activate my access. Thank you!`;
+      window.open(`https://wa.me/917992306763?text=${msg}`, '_blank');
+    }
+  </script>
+</body>
+</html>
